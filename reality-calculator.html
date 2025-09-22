@@ -252,8 +252,54 @@
             </p>
         </div>
 
+        <!-- Navigation Menu -->
+        <div class="card mb-8">
+            <div class="section-header">
+                <h2 class="text-2xl font-bold">🗺️ Explore Financial Reality</h2>
+                <p class="text-blue-100 mt-2">Choose your path to understanding</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button onclick="scrollToSection('calculator')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">🧮 Budget Calculator</div>
+                    <div class="text-sm text-gray-600">See the basic financial reality</div>
+                </button>
+                <button onclick="scrollToSection('emergency-simulator')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">🚨 Emergency Simulator</div>
+                    <div class="text-sm text-gray-600">One expense away from disaster</div>
+                </button>
+                <button onclick="scrollToSection('time-poverty')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">⏰ Time Poverty</div>
+                    <div class="text-sm text-gray-600">Hours needed to afford basics</div>
+                </button>
+                <button onclick="scrollToSection('benefits-cliff')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">📉 Benefits Cliff</div>
+                    <div class="text-sm text-gray-600">Why raises can hurt</div>
+                </button>
+                <button onclick="scrollToSection('impossible-choices')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">🤔 Impossible Choices</div>
+                    <div class="text-sm text-gray-600">Decisions no one should make</div>
+                </button>
+                <button onclick="scrollToSection('poverty-tax')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">💸 The Poverty Tax</div>
+                    <div class="text-sm text-gray-600">How being poor costs extra</div>
+                </button>
+                <button onclick="scrollToSection('geography')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">🗺️ Geography Impact</div>
+                    <div class="text-sm text-gray-600">Location vs. wages</div>
+                </button>
+                <button onclick="scrollToSection('generational')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">👨‍👩‍👧‍👦 Generational Impact</div>
+                    <div class="text-sm text-gray-600">Breaking the cycle</div>
+                </button>
+                <button onclick="scrollToSection('day-in-life')" class="btn-secondary text-left p-4">
+                    <div class="text-lg font-semibold">🌅 A Day in the Life</div>
+                    <div class="text-sm text-gray-600">24 hours of struggle</div>
+                </button>
+            </div>
+        </div>
+
         <!-- Calculator Section -->
-        <div class="card mb-12">
+        <div id="calculator" class="card mb-12">
             <div class="section-header">
                 <h2 class="text-3xl font-bold">🧮 Budget Calculator</h2>
                 <p class="text-blue-100 mt-2">Enter your details to see the financial reality</p>
@@ -1405,7 +1451,1144 @@
                 }
             });
         });
+
+        // Emergency Simulator Functions
+        function simulateEmergency(type, cost) {
+            const stories = {
+                car: "Maria's story: 'My transmission died on a Monday. I couldn't get to work, lost my job by Friday. The repair cost $500, but losing my job cost me everything. I ended up homeless within two months.'",
+                medical: "James's story: 'My son broke his arm. The ER copay was $300. I had to choose between paying rent or the medical bill. We were evicted 30 days later.'",
+                dental: "Sarah's story: 'I ignored my toothache for months because I couldn't afford a dentist. When it became unbearable, the emergency extraction cost $250. I had to choose between that and groceries for my kids.'",
+                work: "David's story: 'My daughter got sick and I had to miss a week of work - no paid sick leave. Lost $400 in wages. Couldn't pay electric bill. We lived without power for three weeks.'",
+                phone: "Lisa's story: 'My phone died and I needed it to get work calls. Spent my grocery money on a replacement. We ate ramen for two weeks straight.'"
+            };
+
+            const effects = {
+                car: [
+                    "Immediate: -$500 from emergency fund (if any)",
+                    "Week 1: Miss work, lose $300 in wages",
+                    "Week 2: Late rent fee: -$50",
+                    "Week 3: Overdraft fees from bounced checks: -$35 each",
+                    "Month 2: Possible job loss from unreliable transportation",
+                    "Month 3: Potential eviction, credit damage"
+                ],
+                medical: [
+                    "Immediate: -$300 medical copay",
+                    "Week 1: Choose between rent and medical payment",
+                    "Week 2: Late payment fees start accumulating",
+                    "Month 1: Credit score drops from missed payments",
+                    "Month 2: Collections calls begin",
+                    "Month 3: Medical debt affects housing applications"
+                ],
+                dental: [
+                    "Immediate: -$250 for emergency procedure",
+                    "Previous months: Lost productivity from pain",
+                    "Week 1: Can't afford prescription painkillers",
+                    "Week 2: Miss work from complications",
+                    "Month 1: Need additional dental work",
+                    "Long-term: Tooth loss affects job prospects"
+                ],
+                work: [
+                    "Immediate: -$400 in lost wages",
+                    "Week 1: Can't pay utility bill",
+                    "Week 2: Electricity shut off notice",
+                    "Week 3: Power disconnected",
+                    "Month 1: Late fees and reconnection costs",
+                    "Long-term: Child's health worsens from stress"
+                ],
+                phone: [
+                    "Immediate: -$200 from food budget",
+                    "Week 1: Family eats rice and beans only",
+                    "Week 2: Kids ask teachers for extra snacks",
+                    "Week 3: Consider food bank",
+                    "Month 1: Malnutrition affects work performance",
+                    "Long-term: Children's development impacted"
+                ]
+            };
+
+            document.getElementById('emergency-impact').innerHTML = effects[type]
+                .map(effect => `<div class="p-2 bg-white rounded border-l-4 border-red-500">${effect}</div>`)
+                .join('');
+
+            document.getElementById('emergency-story').innerHTML = `
+                <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                    <div class="font-semibold mb-2">${type.charAt(0).toUpperCase() + type.slice(1)} Emergency - Real Impact</div>
+                    <div class="italic">"${stories[type]}"</div>
+                </div>
+            `;
+        }
+
+        // Benefits Cliff Calculator
+        function updateBenefitsCliff() {
+            const wage = parseFloat(document.getElementById('cliff-wage').value);
+            document.getElementById('cliff-wage-display').textContent = wage.toFixed(2);
+
+            // Calculate income for family of 3 (2 adults, 1 child)
+            const monthlyIncome = wage * 160;
+            const annualIncome = monthlyIncome * 12;
+            const fpl = 24860; // 2024 FPL for family of 3
+
+            // Benefits eligibility thresholds
+            const snapThreshold = fpl * 1.3; // 130% FPL
+            const medicaidThreshold = fpl * 1.38; // 138% FPL
+            const childcareThreshold = fpl * 2.0; // 200% FPL
+            const housingThreshold = fpl * 0.8; // 80% FPL
+
+            // Calculate benefits lost
+            let snapLost = 0, medicaidLost = 0, childcareLost = 0, housingLost = 0;
+
+            if (annualIncome > snapThreshold) snapLost = 766; // Family of 3 SNAP benefit
+            if (annualIncome > medicaidThreshold) medicaidLost = 271; // Healthcare costs
+            if (annualIncome > childcareThreshold) childcareLost = 446; // Childcare subsidy
+            if (annualIncome > housingThreshold) housingLost = 947; // Section 8 housing assistance
+
+            const totalBenefitsLost = snapLost + medicaidLost + childcareLost + housingLost;
+
+            // Calculate income gained from baseline $12/hour
+            const baselineWage = 12;
+            const baselineMonthly = baselineWage * 160;
+            const grossGained = monthlyIncome - baselineMonthly;
+            const taxesAdditional = grossGained * 0.15; // Rough tax rate
+            const netGained = grossGained - taxesAdditional;
+
+            const netChange = netGained - totalBenefitsLost;
+
+            // Update display
+            document.getElementById('snap-lost').textContent = snapLost;
+            document.getElementById('medicaid-lost').textContent = medicaidLost;
+            document.getElementById('childcare-lost').textContent = childcareLost;
+            document.getElementById('housing-lost').textContent = housingLost;
+            document.getElementById('total-benefits-lost').textContent = totalBenefitsLost;
+
+            document.getElementById('gross-gained').textContent = Math.max(0, grossGained);
+            document.getElementById('taxes-additional').textContent = Math.max(0, taxesAdditional.toFixed(0));
+            document.getElementById('net-gained').textContent = Math.max(0, netGained.toFixed(0));
+
+            const changeElement = document.getElementById('cliff-net-change');
+            const messageElement = document.getElementById('cliff-message');
+            const resultElement = document.getElementById('cliff-result');
+
+            changeElement.textContent = (netChange >= 0 ? '+$' : '-$') + Math.abs(netChange).toFixed(0);
+
+            if (netChange < 0) {
+                changeElement.className = 'text-red-600';
+                resultElement.className = 'mt-6 p-6 rounded-lg bg-red-50';
+                messageElement.textContent = 'This wage increase actually makes the family poorer! This is the "benefits cliff."';
+            } else {
+                changeElement.className = 'text-green-600';
+                resultElement.className = 'mt-6 p-6 rounded-lg bg-green-50';
+                messageElement.textContent = 'At this wage level, the family comes out ahead.';
+            }
+        }
+
+        // Navigation function
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize benefits cliff on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            updateBenefitsCliff();
+        });
+
+        // Impossible Choices Scenarios
+        const scenarios = {
+            'sick-child': {
+                text: "Your 6-year-old has a fever of 102°F and is throwing up. You work at a restaurant with no paid sick leave. If you miss work, you won't be able to pay for groceries this week. What do you do?",
+                choices: [
+                    { text: "Stay home with your child", result: "You lose $80 in wages. Your child recovers, but you have to choose between paying the electric bill or buying groceries. You visit the food bank for the first time." },
+                    { text: "Leave your child with a neighbor and go to work", result: "Your neighbor calls - your child's fever spiked to 104°F. You rush to the ER, missing work anyway. The ER bill is $300, and you lost wages. Your boss threatens to fire you for leaving." },
+                    { text: "Take your child to work with you", result: "Your boss sends you home immediately and docks your pay. Your child infects two coworkers. You're written up and may lose your job." }
+                ]
+            },
+            'car-broke': {
+                text: "Your car won't start and you need to be at work in 2 hours. The repair will cost $400 you don't have. You live 15 miles from work with no public transportation. What do you do?",
+                choices: [
+                    { text: "Take out a payday loan for the repair", result: "You get the $400 loan at 400% APR. The repair takes 3 days, so you miss work anyway. In 2 weeks, you owe $500. The debt spiral begins." },
+                    { text: "Try to find rides from coworkers", result: "You find rides for a week, but it's unreliable. You're late twice and miss one day completely. Your boss gives you a final warning. The stress is overwhelming." },
+                    { text: "Look for a job closer to home", result: "You spend your last $20 on bus fare for job interviews. The only nearby job pays $2/hour less. You take it, but now can't afford your current apartment." }
+                ]
+            },
+            'eviction-notice': {
+                text: "You received an eviction notice. You're $200 short on rent and have 3 days to pay or face eviction. Your next paycheck isn't for 5 days. What do you do?",
+                choices: [
+                    { text: "Ask family for help", result: "Your family is also struggling and can only lend $50. You're still $150 short. The eviction proceeds. You and your children become homeless." },
+                    { text: "Sell your belongings", result: "You sell your TV, jewelry, and tools for $180. You make rent but have no emergency fund left. Next month, a medical bill puts you in the same situation." },
+                    { text: "Try to negotiate with the landlord", result: "Your landlord agrees to a payment plan but adds $100 in late fees. You avoid eviction but now owe even more money you don't have." }
+                ]
+            },
+            'medicine-choice': {
+                text: "You have diabetes and need insulin. Your prescription costs $120, but you only have $100 left for the week. Your family needs groceries. What do you do?",
+                choices: [
+                    { text: "Buy the insulin and skip groceries", result: "You take your medicine but your family eats rice and beans for a week. Your children ask why there's no food. You feel like you're failing as a parent." },
+                    { text: "Buy groceries and skip the insulin", result: "Your blood sugar spikes dangerously. You end up in the ER with diabetic ketoacidosis. The hospital bill is $3,000, and you nearly died." },
+                    { text: "Try to stretch the insulin and buy some food", result: "You take half doses to make it last. Your blood sugar is unstable, affecting your work performance. Your boss notices you're 'unreliable' lately." }
+                ]
+            }
+        };
+
+        function startScenario(scenarioId) {
+            const scenario = scenarios[scenarioId];
+            document.getElementById('scenario-intro').classList.add('hidden');
+            document.getElementById('scenario-content').classList.remove('hidden');
+
+            document.getElementById('scenario-text').textContent = scenario.text;
+
+            const choicesDiv = document.getElementById('scenario-choices');
+            choicesDiv.innerHTML = '';
+
+            scenario.choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = 'w-full text-left p-4 bg-white rounded-lg border hover:bg-gray-50';
+                button.innerHTML = `<div class="font-semibold">${choice.text}</div>`;
+                button.onclick = () => showResult(choice.result);
+                choicesDiv.appendChild(button);
+            });
+        }
+
+        function showResult(result) {
+            const resultDiv = document.getElementById('scenario-result');
+            resultDiv.innerHTML = `
+                <div class="bg-red-50 border-l-4 border-red-500 p-4">
+                    <div class="font-semibold text-red-600 mb-2">Consequence:</div>
+                    <div class="text-gray-700">${result}</div>
+                </div>
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                    <div class="font-semibold text-blue-600">The Reality:</div>
+                    <div class="text-sm text-gray-700 mt-2">
+                        These scenarios are based on real experiences. When you're living paycheck to paycheck, 
+                        there are often no good choices - only different types of harm.
+                    </div>
+                </div>
+            `;
+            resultDiv.classList.remove('hidden');
+
+            // Hide choices after selection
+            document.getElementById('scenario-choices').classList.add('hidden');
+        }
+
+        function resetScenarios() {
+            document.getElementById('scenario-intro').classList.remove('hidden');
+            document.getElementById('scenario-content').classList.add('hidden');
+            document.getElementById('scenario-result').classList.add('hidden');
+            document.getElementById('scenario-choices').classList.remove('hidden');
+        }
+
+        // Day in the Life Stories
+        const dayStories = {
+            maria: {
+                name: "Maria, 28 - Single Mom, 2 Jobs",
+                timeline: [
+                    { time: "4:30 AM", event: "Wake up, shower quickly while kids sleep", stress: "😴 Exhausted from 4 hours sleep" },
+                    { time: "5:00 AM", event: "Get kids ready, pack lunches with whatever's left", stress: "😰 Worried about grocery money" },
+                    { time: "5:45 AM", event: "Drop kids at neighbor's house", stress: "🙏 Grateful for help, feels guilty" },
+                    { time: "6:30 AM", event: "Arrive at cleaning job (office building)", stress: "💪 Ready to work hard" },
+                    { time: "10:00 AM", event: "Finish cleaning, rush to second job", stress: "🏃‍♀️ No time for breakfast" },
+                    { time: "11:00 AM", event: "Start shift at restaurant", stress: "😊 Smile for customers despite exhaustion" },
+                    { time: "2:00 PM", event: "Pick up kids from neighbor", stress: "😔 Kids ask why mommy is always tired" },
+                    { time: "3:00 PM", event: "Help with homework, do laundry", stress: "📚 Struggles to help with math" },
+                    { time: "5:00 PM", event: "Cook dinner with food bank groceries", stress: "🍝 Kids complain about same meal again" },
+                    { time: "7:00 PM", event: "Bath time, bedtime stories", stress: "❤️ Best part of her day" },
+                    { time: "8:30 PM", event: "Kids asleep, pay bills online", stress: "💸 $50 short on electric bill" },
+                    { time: "10:00 PM", event: "Prep for tomorrow, set 3 alarms", stress: "😟 Worries about oversleeping" },
+                    { time: "11:00 PM", event: "Finally in bed", stress: "🧠 Mind racing about tomorrow's challenges" }
+                ]
+            },
+            james: {
+                name: "James, 45 - Disabled Veteran, Part-time",
+                timeline: [
+                    { time: "6:00 AM", event: "Wake up to back pain", stress: "😣 Pain level 7/10 today" },
+                    { time: "6:30 AM", event: "Take medication, wait for it to work", stress: "💊 Only 3 pills left until payday" },
+                    { time: "8:00 AM", event: "Light breakfast, check job schedule", stress: "📱 Only 15 hours this week" },
+                    { time: "9:00 AM", event: "Physical therapy exercises", stress: "💪 Necessary but exhausting" },
+                    { time: "11:00 AM", event: "Start part-time shift at grocery store", stress: "🛒 Standing is difficult today" },
+                    { time: "2:00 PM", event: "Lunch break, eat in car to save money", stress: "🥪 PB&J again" },
+                    { time: "4:00 PM", event: "Finish work, back pain worsening", stress: "😰 Worried about calling in sick" },
+                    { time: "5:00 PM", event: "VA appointment (finally got one)", stress: "🏥 2-hour wait for 10-minute visit" },
+                    { time: "7:30 PM", event: "Grocery shopping with employee discount", stress: "🧮 Calculating every purchase" },
+                    { time: "8:30 PM", event: "Simple dinner, ice pack on back", stress: "🍲 Canned soup and crackers" },
+                    { time: "9:00 PM", event: "Apply for disability benefits online", stress: "📋 Denied twice already" },
+                    { time: "10:30 PM", event: "Watch TV to distract from pain", stress: "📺 Can't afford cable, just antenna" },
+                    { time: "12:00 AM", event: "Try to sleep despite pain", stress: "😔 Wondering if tomorrow will be better" }
+                ]
+            },
+            sarah: {
+                name: "Sarah, 19 - College Student, Full-time Worker",
+                timeline: [
+                    { time: "5:00 AM", event: "Wake up in shared apartment", stress: "😴 3 roommates, thin walls" },
+                    { time: "5:30 AM", event: "Quick shower, instant coffee", stress: "☕ Can't afford coffee shop" },
+                    { time: "6:00 AM", event: "Study for exam while eating cereal", stress: "📚 Behind on reading" },
+                    { time: "7:00 AM", event: "Bus to work (45-minute commute)", stress: "🚌 Bus is late again" },
+                    { time: "8:00 AM", event: "Start shift at retail store", stress: "👕 Smile and fold clothes" },
+                    { time: "12:00 PM", event: "Lunch break, study in break room", stress: "📖 Trying to catch up" },
+                    { time: "5:00 PM", event: "Finish work, rush to campus", stress: "🏃‍♀️ Might miss first class" },
+                    { time: "6:00 PM", event: "Evening classes begin", stress: "😵 Struggling to stay awake" },
+                    { time: "9:00 PM", event: "Classes end, library study time", stress: "💻 Laptop battery dying" },
+                    { time: "11:00 PM", event: "Bus home, study on phone", stress: "📱 Using phone flashlight to read" },
+                    { time: "12:00 AM", event: "Home, quick dinner", stress: "🍜 Ramen noodles again" },
+                    { time: "1:00 AM", event: "More studying, write paper", stress: "✍️ Due tomorrow, barely started" },
+                    { time: "3:00 AM", event: "Finally sleep", stress: "😰 Alarm set for 5 AM again" }
+                ]
+            }
+        };
+
+        function showDayInLife(person) {
+            const story = dayStories[person];
+            document.getElementById('day-person').textContent = story.name;
+            document.getElementById('day-timeline').classList.remove('hidden');
+
+            const timelineContent = document.getElementById('timeline-content');
+            timelineContent.innerHTML = story.timeline.map(item => `
+                <div class="flex items-start space-x-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="font-bold text-blue-600 min-w-[80px]">${item.time}</div>
+                    <div class="flex-1">
+                        <div class="font-semibold">${item.event}</div>
+                        <div class="text-sm text-gray-600 mt-1">${item.stress}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // What Would You Cut functionality
+        let cutItems = {};
+        let totalCut = 0;
+
+        const cutConsequences = {
+            rent: "🏠 Eviction notice in 3 days. Homelessness looms. Credit destroyed for years.",
+            groceries: "🍽️ Family goes hungry. Kids ask teachers for extra snacks. Malnutrition affects work performance.",
+            electricity: "💡 Power shut off. Food spoils. Kids can't do homework. Reconnection fees add $200.",
+            car: "🚗 Car repossessed. Can't get to work. Lose job. Downward spiral begins.",
+            medicine: "💊 Blood sugar spikes dangerously. ER visit costs $3,000. Nearly die from diabetic coma.",
+            phone: "📱 Lose connection to work. Miss job opportunities. Can't call for emergencies."
+        };
+
+        function toggleCut(item, amount) {
+            const button = event.target;
+
+            if (cutItems[item]) {
+                // Uncut the item
+                delete cutItems[item];
+                totalCut -= amount;
+                button.textContent = 'Cut';
+                button.className = 'cut-btn bg-red-500 text-white px-3 py-1 rounded text-sm';
+            } else {
+                // Cut the item
+                cutItems[item] = amount;
+                totalCut += amount;
+                button.textContent = 'Restore';
+                button.className = 'cut-btn bg-green-500 text-white px-3 py-1 rounded text-sm';
+            }
+
+            updateCutDisplay();
+        }
+
+        function updateCutDisplay() {
+            document.getElementById('total-cut').textContent = totalCut;
+
+            const consequencesDiv = document.getElementById('cut-consequences');
+            const statusDiv = document.getElementById('cut-status');
+
+            if (totalCut === 0) {
+                consequencesDiv.innerHTML = '<div class="text-gray-600">Select items to cut and see what happens...</div>';
+                statusDiv.textContent = '';
+                statusDiv.className = 'mt-2 font-bold';
+            } else {
+                const consequences = Object.keys(cutItems).map(item =>
+                    `<div class="p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                        <div class="font-semibold text-red-600">${item.charAt(0).toUpperCase() + item.slice(1)} Cut:</div>
+                        <div class="text-sm text-gray-700">${cutConsequences[item]}</div>
+                    </div>`
+                ).join('');
+
+                consequencesDiv.innerHTML = consequences;
+
+                if (totalCut >= 200) {
+                    statusDiv.textContent = '✓ Budget balanced, but at what cost?';
+                    statusDiv.className = 'mt-2 font-bold text-green-600';
+                } else {
+                    statusDiv.textContent = `Still need to cut $${200 - totalCut} more`;
+                    statusDiv.className = 'mt-2 font-bold text-red-600';
+                }
+            }
+        }
     </script>
+
+    <!-- Emergency Simulator Section -->
+    <div id="emergency-simulator" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">🚨 One Emergency Away</h2>
+            <p class="text-blue-100 mt-2">See how a single unexpected expense can destroy a tight budget</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-4">Choose Your Emergency</h3>
+                <div class="space-y-4">
+                    <button onclick="simulateEmergency('car', 500)"
+                        class="w-full text-left p-4 bg-white rounded-lg border hover:bg-red-50">
+                        <div class="font-semibold">🚗 Car Repair</div>
+                        <div class="text-sm text-gray-600">$500 - Transmission problems</div>
+                    </button>
+                    <button onclick="simulateEmergency('medical', 300)"
+                        class="w-full text-left p-4 bg-white rounded-lg border hover:bg-red-50">
+                        <div class="font-semibold">🏥 Medical Emergency</div>
+                        <div class="text-sm text-gray-600">$300 - ER visit copay</div>
+                    </button>
+                    <button onclick="simulateEmergency('dental', 250)"
+                        class="w-full text-left p-4 bg-white rounded-lg border hover:bg-red-50">
+                        <div class="font-semibold">🦷 Dental Emergency</div>
+                        <div class="text-sm text-gray-600">$250 - Emergency tooth extraction</div>
+                    </button>
+                    <button onclick="simulateEmergency('work', 400)"
+                        class="w-full text-left p-4 bg-white rounded-lg border hover:bg-red-50">
+                        <div class="font-semibold">📅 Missed Work</div>
+                        <div class="text-sm text-gray-600">$400 - One week without pay (sick child)</div>
+                    </button>
+                    <button onclick="simulateEmergency('phone', 200)"
+                        class="w-full text-left p-4 bg-white rounded-lg border hover:bg-red-50">
+                        <div class="font-semibold">📱 Phone Broken</div>
+                        <div class="text-sm text-gray-600">$200 - Need phone for work</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-yellow-600 mb-4">Cascading Effects</h3>
+                <div id="emergency-impact" class="space-y-3 text-sm">
+                    <div class="text-gray-600">Select an emergency to see the ripple effects...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-blue-50 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-blue-600 mb-4">Real Stories</h3>
+            <div id="emergency-story" class="text-gray-700">
+                Click an emergency above to read real experiences from people who lived through these situations.
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Poverty Calculator -->
+    <div id="time-poverty" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">⏰ Time Poverty Calculator</h2>
+            <p class="text-blue-100 mt-2">See how many hours of work basic necessities really cost</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-blue-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-blue-600 mb-4">At $7.25/hour (Federal Minimum)</h3>
+                <div class="space-y-3" id="time-poverty-min">
+                    <div class="flex justify-between items-center">
+                        <span>🥛 Gallon of milk ($3.50)</span>
+                        <span class="font-bold text-blue-600">29 minutes</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>🍞 Loaf of bread ($2.50)</span>
+                        <span class="font-bold text-blue-600">21 minutes</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>⛽ Gallon of gas ($3.20)</span>
+                        <span class="font-bold text-blue-600">26 minutes</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>🏠 Average rent ($1,326)</span>
+                        <span class="font-bold text-blue-600">183 hours</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>🚗 Car payment ($350)</span>
+                        <span class="font-bold text-blue-600">48 hours</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>📱 Phone bill ($50)</span>
+                        <span class="font-bold text-blue-600">7 hours</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-green-600 mb-4">At $15/hour (Living Wage)</h3>
+                <div class="space-y-3" id="time-poverty-living">
+                    <div class="flex justify-between items-center">
+                        <span>🥛 Gallon of milk ($3.50)</span>
+                        <span class="font-bold text-green-600">14 minutes</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>🍞 Loaf of bread ($2.50)</span>
+                        <span class="font-bold text-green-600">10 minutes</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>⛽ Gallon of gas ($3.20)</span>
+                        <span class="font-bold text-green-600">13 minutes</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>🏠 Average rent ($1,326)</span>
+                        <span class="font-bold text-green-600">88 hours</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>🚗 Car payment ($350)</span>
+                        <span class="font-bold text-green-600">23 hours</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>📱 Phone bill ($50)</span>
+                        <span class="font-bold text-green-600">3.3 hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-orange-50 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-orange-600 mb-4">The Reality</h3>
+            <p class="text-gray-700 text-lg leading-relaxed">
+                At minimum wage, rent alone requires <strong>183 hours of work per month</strong> - that's 46 hours per
+                week just for housing.
+                Add food, transportation, and other basics, and you need to work more than 60 hours per week just to
+                survive.
+            </p>
+        </div>
+    </div>
+
+    <!-- Benefits Cliff Visualizer -->
+    <div id="benefits-cliff" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">📉 The Benefits Cliff</h2>
+            <p class="text-blue-100 mt-2">Why getting a raise can actually make you poorer</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+            <div class="mb-4">
+                <label for="cliff-wage" class="block text-lg font-semibold mb-2">Adjust hourly wage:</label>
+                <input type="range" id="cliff-wage" min="7.25" max="20" step="0.25" value="12" class="w-full"
+                    onchange="updateBenefitsCliff()">
+                <div class="text-center mt-2 text-lg font-bold">$<span id="cliff-wage-display">12.00</span>/hour</div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-4">Government Benefits Lost</h3>
+                <div class="space-y-3" id="benefits-lost">
+                    <div class="flex justify-between">
+                        <span>SNAP (Food Stamps)</span>
+                        <span class="font-bold">$<span id="snap-lost">0</span>/month</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Medicaid</span>
+                        <span class="font-bold">$<span id="medicaid-lost">0</span>/month</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Childcare Subsidies</span>
+                        <span class="font-bold">$<span id="childcare-lost">0</span>/month</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Housing Assistance</span>
+                        <span class="font-bold">$<span id="housing-lost">0</span>/month</span>
+                    </div>
+                    <div class="border-t pt-2 mt-2">
+                        <div class="flex justify-between text-lg font-bold">
+                            <span>Total Benefits Lost</span>
+                            <span class="text-red-600">$<span id="total-benefits-lost">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-green-600 mb-4">Income Gained</h3>
+                <div class="space-y-3" id="income-gained">
+                    <div class="flex justify-between">
+                        <span>Additional Gross Pay</span>
+                        <span class="font-bold">$<span id="gross-gained">0</span>/month</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Less: Additional Taxes</span>
+                        <span class="font-bold">-$<span id="taxes-additional">0</span>/month</span>
+                    </div>
+                    <div class="border-t pt-2 mt-2">
+                        <div class="flex justify-between text-lg font-bold">
+                            <span>Net Income Gained</span>
+                            <span class="text-green-600">$<span id="net-gained">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 p-6 rounded-lg" id="cliff-result">
+            <div class="text-center text-2xl font-bold">
+                Net Change: <span id="cliff-net-change" class="text-gray-600">$0</span>
+            </div>
+            <div class="text-center text-lg mt-2" id="cliff-message">
+                Adjust the wage slider to see the benefits cliff in action
+            </div>
+        </div>
+    </div>
+
+    <!-- Impossible Choices Decision Tree -->
+    <div id="impossible-choices" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">🤔 Impossible Choices</h2>
+            <p class="text-blue-100 mt-2">Experience the decisions no one should have to make</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+            <div id="scenario-intro" class="text-center">
+                <h3 class="text-xl font-semibold mb-4">Choose a scenario to begin:</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <button onclick="startScenario('sick-child')" class="btn-secondary p-4 text-left">
+                        <div class="font-semibold">🤒 Sick Child</div>
+                        <div class="text-sm text-gray-600">Your child has a fever and you can't afford to miss work
+                        </div>
+                    </button>
+                    <button onclick="startScenario('car-broke')" class="btn-secondary p-4 text-left">
+                        <div class="font-semibold">🚗 Car Broke Down</div>
+                        <div class="text-sm text-gray-600">Your only transportation to work is broken</div>
+                    </button>
+                    <button onclick="startScenario('eviction-notice')" class="btn-secondary p-4 text-left">
+                        <div class="font-semibold">🏠 Eviction Notice</div>
+                        <div class="text-sm text-gray-600">You're $200 short on rent and have 3 days</div>
+                    </button>
+                    <button onclick="startScenario('medicine-choice')" class="btn-secondary p-4 text-left">
+                        <div class="font-semibold">💊 Medicine vs Food</div>
+                        <div class="text-sm text-gray-600">You can afford either your medication or groceries</div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="scenario-content" class="hidden">
+                <div id="scenario-text" class="text-lg mb-6"></div>
+                <div id="scenario-choices" class="space-y-3"></div>
+                <div id="scenario-result" class="mt-6 p-4 rounded-lg hidden"></div>
+                <button onclick="resetScenarios()" class="btn-secondary mt-4">Try Another Scenario</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Poverty Tax -->
+    <div id="poverty-tax" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">💸 The Poverty Tax</h2>
+            <p class="text-blue-100 mt-2">How being poor costs extra money</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-4">Poor Person's Costs</h3>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🏦 Banking</div>
+                        <div class="text-sm text-gray-600">No bank account → Check cashing fees</div>
+                        <div class="text-lg font-bold text-red-600">$240/year</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🧺 Laundry</div>
+                        <div class="text-sm text-gray-600">No washer/dryer → Laundromat</div>
+                        <div class="text-lg font-bold text-red-600">$600/year</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🛒 Groceries</div>
+                        <div class="text-sm text-gray-600">No car → Corner store prices</div>
+                        <div class="text-lg font-bold text-red-600">+30% more</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">📱 Phone</div>
+                        <div class="text-sm text-gray-600">Bad credit → Prepaid plans</div>
+                        <div class="text-lg font-bold text-red-600">$360/year extra</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🏠 Housing</div>
+                        <div class="text-sm text-gray-600">Bad credit → Security deposits</div>
+                        <div class="text-lg font-bold text-red-600">$2,000+ upfront</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">💳 Credit</div>
+                        <div class="text-sm text-gray-600">Payday loans → 400% APR</div>
+                        <div class="text-lg font-bold text-red-600">$500 → $2,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-green-600 mb-4">Middle Class Costs</h3>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🏦 Banking</div>
+                        <div class="text-sm text-gray-600">Free checking account</div>
+                        <div class="text-lg font-bold text-green-600">$0/year</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🧺 Laundry</div>
+                        <div class="text-sm text-gray-600">Own washer/dryer</div>
+                        <div class="text-lg font-bold text-green-600">$120/year</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🛒 Groceries</div>
+                        <div class="text-sm text-gray-600">Drive to supermarket/Costco</div>
+                        <div class="text-lg font-bold text-green-600">Base price</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">📱 Phone</div>
+                        <div class="text-sm text-gray-600">Family plan discounts</div>
+                        <div class="text-lg font-bold text-green-600">$480/year</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🏠 Housing</div>
+                        <div class="text-sm text-gray-600">Good credit → Lower deposits</div>
+                        <div class="text-lg font-bold text-green-600">$500 deposit</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">💳 Credit</div>
+                        <div class="text-sm text-gray-600">Credit cards → 18% APR</div>
+                        <div class="text-lg font-bold text-green-600">$500 → $590</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-orange-50 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-orange-600 mb-4">The Poverty Tax Total</h3>
+            <p class="text-gray-700 text-lg leading-relaxed mb-4">
+                Being poor costs an estimated <strong>$2,000-4,000 extra per year</strong> in fees, higher prices, and
+                predatory lending.
+                This "poverty tax" makes it even harder to escape financial hardship.
+            </p>
+            <div class="bg-white p-4 rounded-lg">
+                <div class="text-center text-2xl font-bold text-red-600">
+                    Extra Annual Cost: $3,200+
+                </div>
+                <div class="text-center text-gray-600 mt-2">
+                    That's $267 per month just for being poor
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Geography of Inequality -->
+    <div id="geography" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">🗺️ Geography of Inequality</h2>
+            <p class="text-blue-100 mt-2">How location determines your financial reality</p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-4">High Cost Cities</h3>
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">San Francisco, CA</div>
+                        <div class="text-sm">Min wage: $18.07/hr</div>
+                        <div class="text-sm">1BR rent: $3,500/mo</div>
+                        <div class="text-red-600 font-bold">194 hours for rent</div>
+                    </div>
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">New York, NY</div>
+                        <div class="text-sm">Min wage: $15.00/hr</div>
+                        <div class="text-sm">1BR rent: $2,800/mo</div>
+                        <div class="text-red-600 font-bold">187 hours for rent</div>
+                    </div>
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">Boston, MA</div>
+                        <div class="text-sm">Min wage: $15.00/hr</div>
+                        <div class="text-sm">1BR rent: $2,500/mo</div>
+                        <div class="text-red-600 font-bold">167 hours for rent</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-yellow-600 mb-4">Medium Cost Cities</h3>
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">Denver, CO</div>
+                        <div class="text-sm">Min wage: $17.29/hr</div>
+                        <div class="text-sm">1BR rent: $1,800/mo</div>
+                        <div class="text-yellow-600 font-bold">104 hours for rent</div>
+                    </div>
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">Austin, TX</div>
+                        <div class="text-sm">Min wage: $7.25/hr</div>
+                        <div class="text-sm">1BR rent: $1,600/mo</div>
+                        <div class="text-yellow-600 font-bold">221 hours for rent</div>
+                    </div>
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">Phoenix, AZ</div>
+                        <div class="text-sm">Min wage: $14.35/hr</div>
+                        <div class="text-sm">1BR rent: $1,400/mo</div>
+                        <div class="text-yellow-600 font-bold">98 hours for rent</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-green-600 mb-4">Lower Cost Areas</h3>
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">Birmingham, AL</div>
+                        <div class="text-sm">Min wage: $7.25/hr</div>
+                        <div class="text-sm">1BR rent: $800/mo</div>
+                        <div class="text-green-600 font-bold">110 hours for rent</div>
+                    </div>
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">Wichita, KS</div>
+                        <div class="text-sm">Min wage: $7.25/hr</div>
+                        <div class="text-sm">1BR rent: $700/mo</div>
+                        <div class="text-green-600 font-bold">97 hours for rent</div>
+                    </div>
+                    <div class="bg-white p-3 rounded">
+                        <div class="font-semibold">Toledo, OH</div>
+                        <div class="text-sm">Min wage: $10.10/hr</div>
+                        <div class="text-sm">1BR rent: $650/mo</div>
+                        <div class="text-green-600 font-bold">64 hours for rent</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-blue-600 mb-4">The Geographic Trap</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold mb-2">High-wage cities:</h4>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li>• Higher minimum wages</li>
+                        <li>• More job opportunities</li>
+                        <li>• Better public transportation</li>
+                        <li>• BUT: Housing costs eat up all gains</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">Low-cost areas:</h4>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li>• Lower housing costs</li>
+                        <li>• BUT: Federal minimum wage ($7.25)</li>
+                        <li>• Fewer job opportunities</li>
+                        <li>• Need a car for everything</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-4 p-4 bg-white rounded-lg">
+                <div class="text-center font-bold text-blue-600">
+                    The cruel irony: You need money to move to where you can make money
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generational Impact -->
+    <div id="generational" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">👨‍👩‍👧‍👦 Breaking the Cycle</h2>
+            <p class="text-blue-100 mt-2">How poverty affects children and future generations</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-4">Childhood Poverty Impact</h3>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🧠 Brain Development</div>
+                        <div class="text-sm text-gray-600">Chronic stress affects cognitive development</div>
+                        <div class="text-red-600 font-bold">-13 IQ points on average</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🏫 Education</div>
+                        <div class="text-sm text-gray-600">Frequent school changes, hunger affects learning</div>
+                        <div class="text-red-600 font-bold">23% graduation rate vs 91%</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">🏥 Health</div>
+                        <div class="text-sm text-gray-600">Poor nutrition, delayed medical care</div>
+                        <div class="text-red-600 font-bold">2x higher chronic disease rates</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="font-semibold">😰 Mental Health</div>
+                        <div class="text-sm text-gray-600">Trauma from instability and stress</div>
+                        <div class="text-red-600 font-bold">3x higher depression rates</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-blue-600 mb-4">The Poverty Cycle</h3>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                        <div class="font-semibold">Generation 1: Parents</div>
+                        <div class="text-sm text-gray-600">Low wages → Stress → Multiple jobs → Less time with children
+                        </div>
+                    </div>
+                    <div class="text-center text-2xl">⬇️</div>
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-orange-500">
+                        <div class="font-semibold">Generation 2: Children</div>
+                        <div class="text-sm text-gray-600">Poor schools → Lower achievement → Limited opportunities
+                        </div>
+                    </div>
+                    <div class="text-center text-2xl">⬇️</div>
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-red-500">
+                        <div class="font-semibold">Generation 3: Grandchildren</div>
+                        <div class="text-sm text-gray-600">Cycle repeats → 76% chance of remaining in poverty</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-green-50 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-green-600 mb-4">Breaking the Cycle: What Works</h3>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-lg">
+                    <div class="font-semibold">💰 Income Support</div>
+                    <div class="text-sm text-gray-600 mt-2">Child Tax Credit lifted 3.7 million children out of poverty
+                        in 2021</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                    <div class="font-semibold">🎓 Early Education</div>
+                    <div class="text-sm text-gray-600 mt-2">Universal Pre-K increases graduation rates by 42%</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                    <div class="font-semibold">🏥 Healthcare Access</div>
+                    <div class="text-sm text-gray-600 mt-2">Medicaid expansion reduces child mortality by 50%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- A Day in the Life -->
+    <div id="day-in-life" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">🌅 A Day in the Life</h2>
+            <p class="text-blue-100 mt-2">24 hours in the life of a minimum wage worker</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+            <div class="text-center mb-4">
+                <h3 class="text-xl font-semibold">Choose a person to follow:</h3>
+                <div class="grid md:grid-cols-3 gap-4 mt-4">
+                    <button onclick="showDayInLife('maria')" class="btn-secondary p-4 text-left">
+                        <div class="font-semibold">Maria, 28</div>
+                        <div class="text-sm text-gray-600">Single mom, 2 kids, works 2 jobs</div>
+                    </button>
+                    <button onclick="showDayInLife('james')" class="btn-secondary p-4 text-left">
+                        <div class="font-semibold">James, 45</div>
+                        <div class="text-sm text-gray-600">Disabled veteran, part-time work</div>
+                    </button>
+                    <button onclick="showDayInLife('sarah')" class="btn-secondary p-4 text-left">
+                        <div class="font-semibold">Sarah, 19</div>
+                        <div class="text-sm text-gray-600">College student, full-time worker</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="day-timeline" class="hidden">
+            <div class="bg-white rounded-lg p-6">
+                <h3 id="day-person" class="text-xl font-semibold mb-4"></h3>
+                <div id="timeline-content" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- What Would You Cut -->
+    <div id="what-would-cut" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">✂️ What Would You Cut?</h2>
+            <p class="text-blue-100 mt-2">You're $200 short this month. What goes?</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-4">Monthly Budget: $200 Short</h3>
+                <div class="space-y-3" id="budget-items">
+                    <div class="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">🏠 Rent</div>
+                            <div class="text-sm text-gray-600">Late fees if not paid</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-3 font-bold">$800</span>
+                            <button onclick="toggleCut('rent', 800)"
+                                class="cut-btn bg-red-500 text-white px-3 py-1 rounded text-sm">Cut</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">🛒 Groceries</div>
+                            <div class="text-sm text-gray-600">Family needs to eat</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-3 font-bold">$300</span>
+                            <button onclick="toggleCut('groceries', 300)"
+                                class="cut-btn bg-red-500 text-white px-3 py-1 rounded text-sm">Cut</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">💡 Electricity</div>
+                            <div class="text-sm text-gray-600">Power gets shut off</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-3 font-bold">$120</span>
+                            <button onclick="toggleCut('electricity', 120)"
+                                class="cut-btn bg-red-500 text-white px-3 py-1 rounded text-sm">Cut</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">🚗 Car Payment</div>
+                            <div class="text-sm text-gray-600">Need car for work</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-3 font-bold">$250</span>
+                            <button onclick="toggleCut('car', 250)"
+                                class="cut-btn bg-red-500 text-white px-3 py-1 rounded text-sm">Cut</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">💊 Medications</div>
+                            <div class="text-sm text-gray-600">Diabetes insulin</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-3 font-bold">$150</span>
+                            <button onclick="toggleCut('medicine', 150)"
+                                class="cut-btn bg-red-500 text-white px-3 py-1 rounded text-sm">Cut</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">📱 Phone</div>
+                            <div class="text-sm text-gray-600">Need for work calls</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-3 font-bold">$50</span>
+                            <button onclick="toggleCut('phone', 50)"
+                                class="cut-btn bg-red-500 text-white px-3 py-1 rounded text-sm">Cut</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-yellow-600 mb-4">Consequences</h3>
+                <div id="cut-consequences" class="space-y-3 text-sm">
+                    <div class="text-gray-600">Select items to cut and see what happens...</div>
+                </div>
+                <div class="mt-6 p-4 bg-white rounded-lg">
+                    <div class="text-center">
+                        <div class="text-lg font-semibold">Amount Cut: $<span id="total-cut">0</span></div>
+                        <div class="text-sm text-gray-600">Need to cut: $200</div>
+                        <div id="cut-status" class="mt-2 font-bold"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Dignity Index -->
+    <div id="dignity-index" class="card mb-12">
+        <div class="section-header">
+            <h2 class="text-3xl font-bold">💝 The Dignity Index</h2>
+            <p class="text-blue-100 mt-2">Beyond dollars: How poverty affects human dignity</p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-red-600 mb-4">Daily Humiliations</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">At the Store</div>
+                        <div class="text-gray-600">"Your card was declined" in front of other customers</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">At School</div>
+                        <div class="text-gray-600">Your child qualifies for "free lunch" - everyone knows</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">At Work</div>
+                        <div class="text-gray-600">Wearing the same clothes repeatedly</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">With Friends</div>
+                        <div class="text-gray-600">"I can't afford it" becomes your most common phrase</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-yellow-600 mb-4">Lost Opportunities</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Social Isolation</div>
+                        <div class="text-gray-600">Can't afford to join friends for dinner, movies, activities</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Career Growth</div>
+                        <div class="text-gray-600">Can't afford professional clothes, networking events, training</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Children's Activities</div>
+                        <div class="text-gray-600">No sports, music lessons, field trips for your kids</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Emergency Response</div>
+                        <div class="text-gray-600">Can't help family members in crisis</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-green-600 mb-4">Restoring Dignity</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Living Wages</div>
+                        <div class="text-gray-600">Ability to provide for family without shame</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Universal Programs</div>
+                        <div class="text-gray-600">Benefits for everyone reduce stigma</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Respect at Work</div>
+                        <div class="text-gray-600">Fair scheduling, sick leave, advancement opportunities</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="font-semibold">Community Support</div>
+                        <div class="text-gray-600">Programs that build up rather than tear down</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-blue-50 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-blue-600 mb-4">The Human Cost</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold mb-2">What We Measure:</h4>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li>• Income levels</li>
+                        <li>• Employment rates</li>
+                        <li>• Housing costs</li>
+                        <li>• Healthcare access</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">What We Don't Measure:</h4>
+                    <ul class="text-sm space-y-1 text-gray-700">
+                        <li>• Daily stress and anxiety</li>
+                        <li>• Loss of hope and dreams</li>
+                        <li>• Impact on relationships</li>
+                        <li>• Damage to self-worth</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-6 p-4 bg-white rounded-lg">
+                <div class="text-center font-bold text-blue-600 text-lg">
+                    "Poverty isn't just about money - it's about being treated as if you don't matter."
+                </div>
+                <div class="text-center text-sm text-gray-600 mt-2">
+                    - Person experiencing poverty
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>
