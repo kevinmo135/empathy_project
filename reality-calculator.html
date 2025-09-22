@@ -374,8 +374,31 @@
                     <!-- Income -->
                     <div class="bg-green-50 rounded-lg p-4">
                         <h5 class="text-lg font-semibold text-green-600 mb-2">Monthly Income</h5>
-                        <div class="text-2xl font-bold text-green-600">$<span id="monthly-income">0</span></div>
-                        <div class="text-sm text-gray-600">Based on <span id="hours-worked">160</span> hours/month</div>
+                        <div class="text-sm text-gray-600 mb-1">Gross: $<span id="gross-income">0</span></div>
+                        <div class="space-y-1 text-xs text-gray-500 mb-2">
+                            <div class="flex justify-between">
+                                <span>- Federal Tax</span>
+                                <span>$<span id="federal-tax">0</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>- State Tax</span>
+                                <span>$<span id="state-tax">0</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>- Social Security</span>
+                                <span>$<span id="social-security">0</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>- Medicare</span>
+                                <span>$<span id="medicare">0</span></span>
+                            </div>
+                        </div>
+                        <div class="border-t pt-2">
+                            <div class="text-2xl font-bold text-green-600">$<span id="monthly-income">0</span></div>
+                            <div class="text-sm text-gray-600">Net Take-Home Pay</div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Based on <span id="hours-worked">160</span> hours/month
+                        </div>
                     </div>
 
                     <!-- Expenses -->
@@ -756,6 +779,40 @@
         }
 
         // Main calculation function
+        function calculateTaxes(annualGrossIncome, familySize) {
+            // 2024 tax calculations for low-income individuals
+            const standardDeduction = familySize === 1 ? 14600 : 29200; // Single vs Married Filing Jointly
+            const taxableIncome = Math.max(0, annualGrossIncome - standardDeduction);
+
+            // Federal income tax (2024 brackets)
+            let federalTax = 0;
+            if (taxableIncome > 0) {
+                if (taxableIncome <= 11000) {
+                    federalTax = taxableIncome * 0.10;
+                } else if (taxableIncome <= 44725) {
+                    federalTax = 1100 + (taxableIncome - 11000) * 0.12;
+                } else {
+                    federalTax = 5147 + (taxableIncome - 44725) * 0.22;
+                }
+            }
+
+            // State tax (using average of 5% for states with income tax)
+            const stateTax = annualGrossIncome * 0.03; // Conservative 3% average
+
+            // Social Security tax (6.2% up to wage base)
+            const socialSecurityTax = Math.min(annualGrossIncome * 0.062, 10453.20); // 2024 max
+
+            // Medicare tax (1.45%)
+            const medicareTax = annualGrossIncome * 0.0145;
+
+            return {
+                federal: federalTax / 12, // Monthly
+                state: stateTax / 12,
+                socialSecurity: socialSecurityTax / 12,
+                medicare: medicareTax / 12
+            };
+        }
+
         function calculateBudget() {
             const hourlyWage = parseFloat(document.getElementById('hourly-wage').value) || 7.25;
             const familySize = parseInt(document.getElementById('family-size').value) || 1;
@@ -769,8 +826,16 @@
                 effectiveWage = 15;
             }
 
-            // Calculate monthly income (40 hours/week * 4.33 weeks/month)
-            let monthlyIncome = effectiveWage * 160; // 160 hours per month
+            // Calculate gross monthly income (40 hours/week * 4.33 weeks/month)
+            let grossMonthlyIncome = effectiveWage * 160; // 160 hours per month
+            let annualGrossIncome = grossMonthlyIncome * 12;
+
+            // Calculate taxes and deductions
+            const taxes = calculateTaxes(annualGrossIncome, familySize);
+            const totalMonthlyTaxes = taxes.federal + taxes.state + taxes.socialSecurity + taxes.medicare;
+
+            // Net monthly income after taxes
+            let monthlyIncome = grossMonthlyIncome - totalMonthlyTaxes;
 
             // Apply income-based solutions
             if (activeSolutions.eitc) {
@@ -889,6 +954,11 @@
             const monthlyBalance = monthlyIncome - totalExpenses;
 
             // Update the display
+            document.getElementById('gross-income').textContent = grossMonthlyIncome.toFixed(0);
+            document.getElementById('federal-tax').textContent = taxes.federal.toFixed(0);
+            document.getElementById('state-tax').textContent = taxes.state.toFixed(0);
+            document.getElementById('social-security').textContent = taxes.socialSecurity.toFixed(0);
+            document.getElementById('medicare').textContent = taxes.medicare.toFixed(0);
             document.getElementById('monthly-income').textContent = monthlyIncome.toFixed(0);
             document.getElementById('housing-cost').textContent = housingCost.toFixed(0);
             document.getElementById('food-cost').textContent = foodCost.toFixed(0);
