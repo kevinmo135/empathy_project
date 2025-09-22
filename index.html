@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Empathy Project - Understanding & Action</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .gradient-bg::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.05"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.05"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+    }
+
+    .secondary-button {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .secondary-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .news-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .news-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .bot-message {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .pulse-heart {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .share-button {
+      transition: all 0.3s ease;
+    }
+
+    .share-button:hover {
+      transform: scale(1.05);
+    }
+
+    .loading-spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body class="gradient-bg" style="overflow-x: hidden; overflow-y: auto;">
+  <!-- Navigation -->
+  <nav class="bg-white/10 backdrop-blur-md text-white p-4 relative z-10">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <span class="text-3xl pulse-heart">🤝</span>
+        <div>
+          <h1 class="text-2xl font-bold">The Empathy Project</h1>
+          <p class="text-sm text-white/80">Understanding • Action • Change</p>
+        </div>
+      </div>
+      <a href="reality-calculator.html" class="cta-button text-white px-6 py-3 rounded-xl font-semibold text-lg">
+        💰 Reality Calculator →
+      </a>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto p-6 relative z-10">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <div class="hero-card rounded-3xl p-12 mb-8 shadow-2xl">
+        <div class="text-7xl mb-6 pulse-heart">🤝💡</div>
+        <h1 class="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          The Empathy Project
+        </h1>
+        <p class="text-2xl text-gray-700 max-w-4xl mx-auto mb-8 leading-relaxed">
+          <strong>Understanding leads to action.</strong> Discover the real financial challenges facing millions of
+          Americans,
+          explore proven policy solutions, and see how small changes can transform lives.
+        </p>
+
+        <!-- Primary CTA -->
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8">
+          <a href="reality-calculator.html"
+            class="cta-button text-white px-10 py-4 rounded-2xl font-bold text-xl inline-flex items-center space-x-3">
+            <span>💰</span>
+            <span>Try the Reality Calculator</span>
+            <span>→</span>
+          </a>
+          <button onclick="loadPositiveNews(true)" id="load-news-btn"
+            class="px-8 py-4 rounded-2xl font-semibold text-lg"
+            style="background: linear-gradient(135deg, #10b981, #059669) !important; color: white !important; border: none !important; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;">
+            <span style="color: white !important; font-weight: 600 !important;">✨ Stories of Hope and Change</span>
+          </button>
+        </div>
+
+        <!-- Key Stats -->
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6">
+            <div class="text-3xl font-bold text-blue-600 mb-2">$7.25</div>
+            <div class="text-gray-700 font-medium">Federal Minimum Wage</div>
+            <div class="text-sm text-gray-600 mt-1">Unchanged since 2009</div>
+          </div>
+          <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-6">
+            <div class="text-3xl font-bold text-red-600 mb-2">-$1,200</div>
+            <div class="text-gray-700 font-medium">Monthly Deficit</div>
+            <div class="text-sm text-gray-600 mt-1">For a family of 4</div>
+          </div>
+          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6">
+            <div class="text-3xl font-bold text-green-600 mb-2">+$800</div>
+            <div class="text-gray-700 font-medium">Potential Surplus</div>
+            <div class="text-sm text-gray-600 mt-1">With proven policies</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission Statement (Compact) -->
+      <div class="hero-card rounded-xl p-6 mb-12 text-center">
+        <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto mb-6">
+          <strong>Empathy without action is just sympathy.</strong> We believe that understanding the real challenges
+          people face is the first step toward meaningful change. Our tools help you see beyond statistics to understand
+          the human impact of policy decisions.
+        </p>
+
+        <!-- Action Steps (Compact) -->
+        <div class="grid md:grid-cols-3 gap-4 text-center">
+          <div class="bg-blue-50 rounded-lg p-4">
+            <div class="text-xl mb-2">1️⃣</div>
+            <h4 class="font-semibold text-gray-800 mb-1 text-sm">Understand</h4>
+            <p class="text-gray-600 text-xs">See what minimum wage means for families</p>
+          </div>
+          <div class="bg-purple-50 rounded-lg p-4">
+            <div class="text-xl mb-2">2️⃣</div>
+            <h4 class="font-semibold text-gray-800 mb-1 text-sm">Explore</h4>
+            <p class="text-gray-600 text-xs">Test proven policy solutions</p>
+          </div>
+          <div class="bg-green-50 rounded-lg p-4">
+            <div class="text-xl mb-2">3️⃣</div>
+            <h4 class="font-semibold text-gray-800 mb-1 text-sm">Act</h4>
+            <p class="text-gray-600 text-xs">Share and support meaningful change</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Stories Section (Default Visible) -->
+    <div id="success-stories-section" class="mb-16">
+      <div class="hero-card rounded-2xl p-8 mb-8">
+        <div class="text-center mb-8">
+          <div class="text-5xl mb-4">✨</div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">Stories of Hope & Change</h2>
+          <p class="text-xl text-gray-700 max-w-3xl mx-auto">
+            Real stories of progress and positive change happening around the world.
+            These remind us that <strong>change is possible</strong> when we work together.
+          </p>
+        </div>
+
+        <!-- News Grid -->
+        <div id="news-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- News cards will be inserted here -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Calculator Promotion -->
+    <div id="calculator-promo"
+      class="hero-card rounded-2xl p-10 mb-12 text-center bg-gradient-to-br from-blue-50 to-purple-50">
+      <div class="text-6xl mb-6">💰</div>
+      <h2 class="text-4xl font-bold text-gray-800 mb-6">Ready to See the Reality?</h2>
+      <p class="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+        Our interactive calculator shows you exactly what it costs to live on minimum wage.
+        <strong>The numbers might surprise you.</strong> But more importantly, you'll see how proven policies
+        could change everything.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+        <a href="reality-calculator.html"
+          class="cta-button text-white px-12 py-5 rounded-2xl font-bold text-2xl inline-flex items-center space-x-4 transform hover:scale-105">
+          <span>🚀</span>
+          <span>Launch Reality Calculator</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <p class="text-gray-600 text-lg">
+        <strong>Takes 2 minutes.</strong> Changes how you see poverty forever.
+      </p>
+    </div>
+
+    <!-- News Loading State -->
+    <div id="loading-state" class="hidden text-center py-12">
+      <div class="hero-card rounded-2xl p-8">
+        <div class="loading-spinner w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4">
+        </div>
+        <p class="text-gray-700 text-lg font-medium">Finding amazing stories for you...</p>
+      </div>
+    </div>
+
+
+  </div>
+
+  <script>
+    // Sample positive news stories (fallback if API fails)
+    const sampleStories = [
+      {
+        title: "Community Raises $50,000 for Local Food Bank in 24 Hours",
+        description: "After a social media post about food insecurity went viral, neighbors came together to support families in need, exceeding their goal by 150%.",
+        url: "#",
+        source: "Local Community News",
+        category: "Community"
+      },
+      {
+        title: "Scientists Develop New Method to Clean Ocean Plastic",
+        description: "Researchers have created an innovative system that removes microplastics from ocean water, potentially cleaning millions of gallons per day.",
+        url: "#",
+        source: "Environmental Science Journal",
+        category: "Environment"
+      },
+      {
+        title: "Teacher's Creative Program Helps 100% of Students Graduate",
+        description: "An innovative mentorship program in an underserved district achieved a 100% graduation rate for the third consecutive year.",
+        url: "#",
+        source: "Education Weekly",
+        category: "Education"
+      },
+      {
+        title: "Teenager Invents Device to Help Visually Impaired Navigate",
+        description: "A 16-year-old student created an affordable navigation device that uses sound and vibration to help blind individuals move safely through spaces.",
+        url: "#",
+        source: "Innovation Today",
+        category: "Technology"
+      },
+      {
+        title: "Neighborhood Watch Program Reduces Crime by 60%",
+        description: "A community-led safety initiative has transformed a struggling neighborhood, with residents reporting feeling safer and more connected.",
+        url: "#",
+        source: "Community Safety Report",
+        category: "Community"
+      },
+      {
+        title: "Free Medical Clinic Serves 10,000 Patients in First Year",
+        description: "Volunteer doctors and nurses have provided free healthcare to thousands of uninsured residents, saving families an average of $3,000 per visit.",
+        url: "#",
+        source: "Healthcare Access News",
+        category: "Healthcare"
+      },
+      {
+        title: "High School Students Build Homes for Homeless Veterans",
+        description: "A vocational program partnered with local organizations to construct tiny homes, providing permanent housing for 25 veterans while teaching students valuable skills.",
+        url: "#",
+        source: "Veterans Support Network",
+        category: "Community"
+      },
+      {
+        title: "New Solar Technology Makes Clean Energy 40% More Affordable",
+        description: "Engineers have developed a breakthrough solar panel design that dramatically reduces costs, making renewable energy accessible to low-income communities.",
+        url: "#",
+        source: "Clean Energy Today",
+        category: "Environment"
+      },
+      {
+        title: "Library Program Helps 500 Adults Learn to Read",
+        description: "A volunteer-led literacy program has transformed lives, with participants reporting increased job opportunities and confidence after learning to read.",
+        url: "#",
+        source: "Adult Education Alliance",
+        category: "Education"
+      },
+      {
+        title: "Restaurant Donates 10,000 Meals to Struggling Families",
+        description: "Local restaurant owners organized a community effort to provide free, nutritious meals to families affected by economic hardship.",
+        url: "#",
+        source: "Community Kitchen Network",
+        category: "Community"
+      }
+    ];
+
+    let currentStories = [];
+
+    // Load positive news (using sample data for now)
+    function loadPositiveNews(shouldScroll = false) {
+      const loadingState = document.getElementById('loading-state');
+      const newsGrid = document.getElementById('news-grid');
+      const loadBtn = document.getElementById('load-news-btn');
+
+      // Show loading state
+      loadingState.classList.remove('hidden');
+      newsGrid.innerHTML = '';
+      loadBtn.disabled = true;
+      loadBtn.innerHTML = '<span style="color: white !important; font-weight: 600 !important;">🔄 Loading New Stories...</span>';
+
+      // Simulate API call delay
+      setTimeout(() => {
+        // Shuffle and select random stories
+        const shuffled = [...sampleStories].sort(() => 0.5 - Math.random());
+        currentStories = shuffled.slice(0, 6);
+
+        // Hide loading state
+        loadingState.classList.add('hidden');
+
+        // Display stories
+        displayStories(currentStories);
+
+        // Reset button
+        loadBtn.disabled = false;
+        loadBtn.innerHTML = '<span style="color: white !important; font-weight: 600 !important;">✨ Stories of Hope and Change</span>';
+
+        // Only scroll if user manually clicked the button
+        if (shouldScroll) {
+          document.getElementById('success-stories-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+      }, 2000);
+    }
+
+    // Display stories in the grid
+    function displayStories(stories) {
+      const newsGrid = document.getElementById('news-grid');
+
+      stories.forEach((story, index) => {
+        const card = document.createElement('div');
+        card.className = 'news-card hero-card rounded-2xl p-6 shadow-lg hover:shadow-xl';
+        card.innerHTML = `
+                    <div class="mb-4">
+                        <span class="inline-block bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm px-3 py-1 rounded-full font-semibold">
+                            ${story.category}
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 leading-tight">
+                        ${story.title}
+                    </h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        ${story.description}
+                    </p>
+                    <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                        <span class="text-sm text-gray-500 font-medium">${story.source}</span>
+                        <div class="flex space-x-3">
+                            <button onclick="shareStory(${index})" 
+                                    class="share-button bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+                                📤 Share
+                            </button>
+                            <button onclick="likeStory(${index})" 
+                                    class="share-button bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+                                ❤️ Love
+                    </button>
+                        </div>
+                </div>
+            `;
+
+        // Add animation delay
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('bot-message');
+
+        newsGrid.appendChild(card);
+      });
+    }
+
+    // Stories loaded successfully - no additional message needed
+
+    // Share a specific story
+    function shareStory(index) {
+      const story = currentStories[index];
+      if (navigator.share) {
+        navigator.share({
+          title: story.title,
+          text: story.description,
+          url: window.location.href
+        });
+      } else {
+        // Fallback for browsers that don't support Web Share API
+        const text = `${story.title}\n\n${story.description}\n\nShared from Kindness Bot: ${window.location.href}`;
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Story copied to clipboard! Share it with someone who needs some positivity today! 💝');
+        });
+      }
+    }
+
+    // Share a random story
+    function shareRandomStory() {
+      if (currentStories.length > 0) {
+        const randomIndex = Math.floor(Math.random() * currentStories.length);
+        shareStory(randomIndex);
+      } else {
+        alert('Load some stories first, then I\'ll help you share the positivity! 😊');
+      }
+    }
+
+    // Like a story (just for fun interaction)
+    function likeStory(index) {
+      const story = currentStories[index];
+      const encouragements = [
+        "Yes! Spread that love! ❤️",
+        "You have great taste in good news! 💫",
+        "That story is amazing, right?! 🌟",
+        "Love it! Thanks for appreciating the good stuff! 💝",
+        "Your positivity is contagious! Keep it up! ✨"
+      ];
+
+      const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+
+      // Create a temporary toast message
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+      toast.textContent = randomEncouragement;
+      document.body.appendChild(toast);
+
+      // Remove toast after 3 seconds
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // Initialize with a welcome message
+    document.addEventListener('DOMContentLoaded', function () {
+      // Load positive stories immediately when page loads (no scroll)
+      loadPositiveNews(false);
+
+      // Add some interactive elements
+      const header = document.querySelector('h1');
+      header.addEventListener('click', function () {
+        const emojis = ['🤖💝', '🌟💫', '✨🎉', '💖🌈', '🚀💝'];
+        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+        document.querySelector('.pulse-heart').textContent = randomEmoji;
+      });
+    });
+  </script>
+</body>
+
+</html>

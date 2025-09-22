@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reality Calculator - Low-Income Budget Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Toggle switch styles */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        /* Enhanced button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #374151;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Card styles */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-income {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-left: 6px solid #10b981;
+        }
+
+        .card-expense {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border-left: 6px solid #ef4444;
+        }
+
+        .card-balance {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-left: 6px solid #64748b;
+        }
+
+        .card-solutions {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-left: 6px solid #3b82f6;
+        }
+
+        /* Input styles */
+        .input-field {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        /* Number change animation */
+        @keyframes numberChange {
+            0% {
+                background-color: rgba(34, 197, 94, 0.2);
+                transform: scale(1);
+            }
+
+            50% {
+                background-color: rgba(34, 197, 94, 0.4);
+                transform: scale(1.05);
+            }
+
+            100% {
+                background-color: transparent;
+                transform: scale(1);
+            }
+        }
+
+        .number-change {
+            animation: numberChange 0.8s ease-in-out;
+            border-radius: 8px;
+            padding: 4px 8px;
+        }
+
+        /* Section headers */
+        .section-header {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 16px 16px 0 0;
+            margin: -24px -24px 24px -24px;
+        }
+
+        /* Icon styles */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Success story cards */
+        .success-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .success-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Policy button active state */
+        .policy-btn-active {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white/10 backdrop-blur-md text-white p-4 sticky top-0 z-50">
+        <div class="max-w-full mx-auto px-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold gradient-text">💰 Reality Calculator</h1>
+            <a href="index.html" class="btn-secondary text-white bg-white/20 hover:bg-white/30 border-white/30">
+                ← Back to Kindness Bot
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-container max-w-full mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12 p-8">
+            <h1 class="text-5xl font-bold gradient-text mb-6">💰 Financial Reality Check</h1>
+            <p class="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                Discover the real financial challenges facing low-income workers. This interactive calculator uses
+                <span class="font-semibold text-blue-600">actual government data</span> to show what life looks like on
+                minimum wage
+                and how proven policies could make a difference.
+            </p>
+        </div>
+
+        <!-- Calculator Section -->
+        <div class="card mb-12">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold">🧮 Budget Calculator</h2>
+                <p class="text-blue-100 mt-2">Enter your details to see the financial reality</p>
+            </div>
+
+            <!-- Input Controls -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <label for="hourly-wage" class="block text-lg font-semibold text-gray-800 mb-3">
+                        💵 Hourly Wage
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">$</span>
+                        <input type="number" id="hourly-wage" value="7.25" min="7.25" step="0.25"
+                            class="input-field w-full pl-8 text-lg font-semibold">
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Federal minimum: $7.25/hour</p>
+                </div>
+
+                <div>
+                    <label for="family-size" class="block text-lg font-semibold text-gray-800 mb-3">
+                        👨‍👩‍👧‍👦 Family Size
+                    </label>
+                    <select id="family-size" class="input-field w-full text-lg">
+                        <option value="1">1 person (single)</option>
+                        <option value="2">2 people (couple)</option>
+                        <option value="3">3 people (couple + 1 child)</option>
+                        <option value="4">4 people (couple + 2 children)</option>
+                        <option value="5">5 people (couple + 3 children)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Government Assistance Toggle -->
+            <div class="card-solutions p-6 rounded-lg mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <label class="text-xl font-bold text-gray-800">🏛️ Include Government Assistance</label>
+                        <p class="text-gray-600 mt-1">Federal programs like SNAP, WIC, Medicaid, childcare subsidies,
+                            Section 8</p>
+                    </div>
+                    <div class="toggle-switch" id="government-assistance" onclick="toggleAssistanceDetails()">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+
+                <!-- Assistance Details (Hidden by default) -->
+                <div id="assistance-details" class="hidden mt-6 p-6 bg-white rounded-lg border-2 border-blue-200">
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">📋 Federal Poverty Level (FPL) Eligibility:</h4>
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center"><span class="text-green-500 mr-2">🍎</span> SNAP (Food):
+                                ≤130% FPL</div>
+                            <div class="flex items-center"><span class="text-orange-500 mr-2">🥛</span> WIC (Nutrition):
+                                ≤185% FPL</div>
+                            <div class="flex items-center"><span class="text-red-500 mr-2">🏥</span> Medicaid
+                                (Healthcare): ≤138% FPL</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center"><span class="text-purple-500 mr-2">👶</span> Childcare
+                                Subsidies: ≤200% FPL</div>
+                            <div class="flex items-center"><span class="text-blue-500 mr-2">🏠</span> Section 8 Housing:
+                                ≤80% FPL</div>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                        <p class="text-sm text-yellow-800">
+                            <strong>⚠️ Benefits Cliff:</strong> At $15/hour full-time, a single person earns ~185% FPL,
+                            which may disqualify them from some benefits.
+                        </p>
+                    </div>
+
+                    <!-- Assistance Breakdown -->
+                    <div id="assistance-breakdown" class="mt-6 p-4 bg-gray-50 rounded-lg hidden">
+                        <h5 class="font-bold text-gray-800 mb-3">💰 Monthly Benefits Breakdown:</h5>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                            <div class="bg-white p-3 rounded shadow">
+                                <div class="text-green-600 font-semibold">🍎 SNAP</div>
+                                <div class="text-2xl font-bold">$<span id="snap-benefit">0</span></div>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow">
+                                <div class="text-orange-600 font-semibold">🥛 WIC</div>
+                                <div class="text-2xl font-bold">$<span id="wic-benefit">0</span></div>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow">
+                                <div class="text-red-600 font-semibold">🏥 Medicaid</div>
+                                <div class="text-2xl font-bold">$<span id="medicaid-benefit">0</span></div>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow">
+                                <div class="text-purple-600 font-semibold">👶 Childcare</div>
+                                <div class="text-2xl font-bold">$<span id="childcare-benefit">0</span></div>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow">
+                                <div class="text-blue-600 font-semibold">🏠 Section 8</div>
+                                <div class="text-2xl font-bold">$<span id="section8-benefit">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button onclick="calculateBudget()" class="btn-primary w-full text-xl py-4">
+                🚀 Calculate Monthly Budget
+            </button>
+        </div>
+
+        <!-- Comprehensive Budget & Policy Analysis -->
+        <div id="results" class="hidden bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Budget Analysis & Policy Solutions</h3>
+
+            <!-- Current Budget Breakdown -->
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold text-gray-800 mb-4">📊 Current Monthly Budget</h4>
+
+                <!-- Income & Expenses Grid -->
+                <div class="grid lg:grid-cols-2 gap-8 mb-6">
+                    <!-- Income -->
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h5 class="text-lg font-semibold text-green-600 mb-2">Monthly Income</h5>
+                        <div class="text-2xl font-bold text-green-600">$<span id="monthly-income">0</span></div>
+                        <div class="text-sm text-gray-600">Based on <span id="hours-worked">160</span> hours/month</div>
+                    </div>
+
+                    <!-- Expenses -->
+                    <div class="bg-red-50 rounded-lg p-4">
+                        <h5 class="text-lg font-semibold text-red-600 mb-3">Monthly Expenses</h5>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span>Housing</span>
+                                <span class="font-semibold">$<span id="housing-cost">0</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Food</span>
+                                <span class="font-semibold">$<span id="food-cost">0</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Transportation</span>
+                                <span class="font-semibold">$<span id="transport-cost">0</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Healthcare</span>
+                                <span class="font-semibold">$<span id="healthcare-cost">0</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Childcare</span>
+                                <span class="font-semibold">$<span id="childcare-cost">0</span></span>
+                            </div>
+                            <hr class="border-red-200">
+                            <div class="flex justify-between font-bold text-base">
+                                <span>Total</span>
+                                <span>$<span id="total-expenses-output">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Balance -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-center text-xl font-bold">
+                        <span class="text-gray-800">Current Monthly Balance</span>
+                        <span id="deficit-output" class="text-red-600">-$0</span>
+                    </div>
+                    <div id="narrative" class="mt-3 text-gray-700 text-sm"></div>
+                </div>
+            </div>
+
+            <!-- Unified Policy Solutions Section -->
+            <div class="card mb-8">
+                <div class="section-header">
+                    <h4 class="text-2xl font-bold">🚀 Policy Solutions</h4>
+                    <p class="text-blue-100 mt-2">Test proven policies individually or combine them - all changes update
+                        the budget above</p>
+                </div>
+
+                <!-- All Policy Buttons -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+                    <!-- Minimum Wage -->
+                    <button id="wage-15-btn" onclick="simulatePolicy('wage', 15)"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">💰 $15 Minimum Wage</div>
+                        <div class="text-sm text-gray-600">+$1,240/month income</div>
+                    </button>
+
+                    <!-- Universal Healthcare -->
+                    <button id="healthcare-0-btn" onclick="simulatePolicy('healthcare', 0)"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">🏥 Universal Healthcare</div>
+                        <div class="text-sm text-gray-600">$0 healthcare costs</div>
+                    </button>
+
+                    <!-- Subsidized Childcare -->
+                    <button id="childcare-0-btn" onclick="simulatePolicy('childcare', 0)"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">👶 Subsidized Childcare</div>
+                        <div class="text-sm text-gray-600">$0 childcare costs</div>
+                    </button>
+
+                    <!-- Expanded EITC -->
+                    <button id="solution-eitc" onclick="toggleSolution('eitc')"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">📈 Expanded EITC</div>
+                        <div class="text-sm text-gray-600">+$200/month income</div>
+                    </button>
+
+                    <!-- Child Allowance -->
+                    <button id="solution-child-allowance" onclick="toggleSolution('childAllowance')"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">👨‍👩‍👧‍👦 Child Allowance</div>
+                        <div class="text-sm text-gray-600">+$300/month per child</div>
+                    </button>
+
+                    <!-- Housing Voucher -->
+                    <button id="solution-housing-voucher" onclick="toggleSolution('housingVoucher')"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">🏠 Housing Voucher</div>
+                        <div class="text-sm text-gray-600">-$400/month housing</div>
+                    </button>
+
+                    <!-- Universal Pre-K -->
+                    <button id="solution-universal-prek" onclick="toggleSolution('universalPreK')"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">🎓 Universal Pre-K</div>
+                        <div class="text-sm text-gray-600">-$450/month per child</div>
+                    </button>
+
+                    <!-- Public Health Option -->
+                    <button id="solution-public-health" onclick="toggleSolution('publicHealth')"
+                        class="btn-secondary text-left p-4 h-auto">
+                        <div class="font-bold text-lg mb-1">🩺 Public Health Option</div>
+                        <div class="text-sm text-gray-600">-$100/month healthcare</div>
+                    </button>
+                </div>
+
+                <!-- Reset Button -->
+                <div class="text-center mb-6">
+                    <button onclick="resetAllPolicies()"
+                        class="btn-secondary bg-red-100 text-red-700 hover:bg-red-200 px-8 py-3">
+                        🔄 Reset All Policies
+                    </button>
+                </div>
+
+                <!-- Benefits Cliff Warning (moved here from solutions results) -->
+                <div id="benefits-cliff-warning" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <span class="text-yellow-400 text-xl">⚠️</span>
+                        </div>
+                        <div class="ml-3">
+                            <h6 class="text-lg font-semibold text-yellow-800">Benefits Cliff Alert</h6>
+                            <p class="text-yellow-700 mt-1" id="cliff-warning-text"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Stories -->
+            <div class="card mb-8">
+                <div class="section-header">
+                    <h4 class="text-2xl font-bold">✅ Real-World Success Stories</h4>
+                    <p class="text-blue-100 mt-2">These policies have already worked in real places with real people</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Child Tax Credit 2021 -->
+                    <div class="success-card border-l-4 border-green-500">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">👶</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">Child Tax Credit (2021)</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Monthly payments of $300 per child <strong>cut child poverty by 40%</strong> in just
+                                    one year.
+                                    3.7 million children lifted out of poverty.
+                                </p>
+                                <a href="https://www.census.gov/library/stories/2022/09/record-drop-in-child-poverty.html"
+                                    target="_blank" class="text-blue-600 hover:underline text-sm font-medium">
+                                    📊 U.S. Census Bureau →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alaska Permanent Fund -->
+                    <div class="success-card border-l-4 border-blue-500">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">🏔️</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">Alaska Permanent Fund</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Annual payments ($1,000-$2,000) for 40+ years. <strong>Reduced poverty 20%</strong>
+                                    and boosted rural economies with no negative work effects.
+                                </p>
+                                <a href="https://www.nber.org/papers/w24312" target="_blank"
+                                    class="text-blue-600 hover:underline text-sm font-medium">
+                                    📈 NBER Study →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EITC Success -->
+                    <div class="success-card border-l-4 border-purple-500">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">💼</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">Earned Income Tax Credit</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Lifts <strong>5.6 million people out of poverty</strong> annually.
+                                    Every $1 invested generates $1.50-$2.00 in economic activity.
+                                </p>
+                                <a href="https://www.taxpolicycenter.org/briefing-book/what-earned-income-tax-credit"
+                                    target="_blank" class="text-blue-600 hover:underline text-sm font-medium">
+                                    🏛️ Tax Policy Center →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- $15 Minimum Wage -->
+                    <div class="success-card border-l-4 border-green-600">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">💰</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">$15 Minimum Wage</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Seattle's gradual increase to $15/hr <strong>raised wages 13%</strong>
+                                    with minimal job losses. Workers gained $100+ million annually.
+                                </p>
+                                <a href="https://www.nber.org/papers/w25182" target="_blank"
+                                    class="text-blue-600 hover:underline text-sm font-medium">
+                                    🔬 NBER Research →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Universal Pre-K -->
+                    <div class="success-card border-l-4 border-orange-500">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">🎓</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">Universal Pre-K (Oklahoma)</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Free pre-K for all 4-year-olds. <strong>Increased high school graduation by
+                                        7%</strong>
+                                    and college attendance by 13%. $7 return per $1 invested.
+                                </p>
+                                <a href="https://www.brookings.edu/articles/the-current-state-of-scientific-knowledge-on-pre-k-effects/"
+                                    target="_blank" class="text-blue-600 hover:underline text-sm font-medium">
+                                    🏛️ Brookings Institution →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Housing First -->
+                    <div class="success-card border-l-4 border-red-500">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">🏠</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">Housing Vouchers</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Housing vouchers <strong>reduce homelessness by 75%</strong> and improve
+                                    children's long-term outcomes. Every $1 spent saves $2 in social costs.
+                                </p>
+                                <a href="https://www.huduser.gov/portal/sites/default/files/pdf/Family-Options-Study-3-Year-Impact-Evaluation.pdf"
+                                    target="_blank" class="text-blue-600 hover:underline text-sm font-medium">
+                                    🏛️ HUD Study →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medicaid Expansion -->
+                    <div class="success-card border-l-4 border-teal-500">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">🏥</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">Medicaid Expansion</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    States that expanded Medicaid saw <strong>6.6% drop in uninsured rate</strong>,
+                                    reduced medical debt, and improved financial security for working families.
+                                </p>
+                                <a href="https://www.kff.org/medicaid/issue-brief/the-effects-of-medicaid-expansion-under-the-aca-updated-findings-from-a-literature-review/"
+                                    target="_blank" class="text-blue-600 hover:underline text-sm font-medium">
+                                    📊 Kaiser Family Foundation →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SNAP Benefits -->
+                    <div class="success-card border-l-4 border-yellow-500">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">🍎</span>
+                            <div>
+                                <h5 class="font-bold text-gray-800 mb-2">SNAP Food Assistance</h5>
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Every $1 in SNAP benefits generates <strong>$1.50-$1.80 in economic
+                                        activity</strong>.
+                                    Reduced food insecurity by 30% and improved children's health outcomes.
+                                </p>
+                                <a href="https://www.ers.usda.gov/topics/food-nutrition-assistance/supplemental-nutrition-assistance-program-snap/economic-linkages/"
+                                    target="_blank" class="text-blue-600 hover:underline text-sm font-medium">
+                                    🌾 USDA Research →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sources Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Sources & Methodology</h3>
+
+            <div class="space-y-6">
+                <!-- Data Sources -->
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-3">Data Sources</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• <strong>Housing:</strong> <a href="https://www.huduser.gov/portal/datasets/fmr.html"
+                                class="text-blue-600 hover:underline">HUD Fair Market Rents</a> and national apartment
+                            rental data</li>
+                        <li>• <strong>Food:</strong> <a
+                                href="https://www.fns.usda.gov/cnpp/usda-food-plans-cost-food-reports-monthly-reports"
+                                class="text-blue-600 hover:underline">USDA Thrifty Food Plan</a> cost estimates</li>
+                        <li>• <strong>Transportation:</strong> <a href="https://www.bls.gov/cex/"
+                                class="text-blue-600 hover:underline">Bureau of Labor Statistics Consumer Expenditure
+                                Survey</a> - Low-income households (lowest quintile) spending patterns</li>
+                        <li>• <strong>Healthcare:</strong> <a href="https://www.bls.gov/cex/"
+                                class="text-blue-600 hover:underline">BLS healthcare spending data</a> for lowest income
+                            quintile</li>
+                        <li>• <strong>Childcare:</strong> <a
+                                href="https://www.chicagofed.org/publications/chicago-fed-letter/2019/425"
+                                class="text-blue-600 hover:underline">Federal Reserve Bank of Chicago</a> childcare
+                            spending analysis</li>
+                    </ul>
+                </div>
+
+                <!-- Government Assistance -->
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-3">Government Assistance Programs</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• <strong>SNAP:</strong> <a href="https://www.fns.usda.gov/snap/recipient/eligibility"
+                                class="text-blue-600 hover:underline">USDA Food and Nutrition Service</a></li>
+                        <li>• <strong>Medicaid:</strong> <a
+                                href="https://www.medicaid.gov/medicaid/eligibility/index.html"
+                                class="text-blue-600 hover:underline">Medicaid.gov eligibility guidelines</a></li>
+                        <li>• <strong>Housing:</strong> <a
+                                href="https://www.hud.gov/topics/housing_choice_voucher_program_section_8"
+                                class="text-blue-600 hover:underline">HUD Section 8 Housing Choice Voucher Program</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Important Notes -->
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-3">Important Notes</h4>
+                    <ul class="space-y-1 text-sm text-gray-600">
+                        <li>• All figures represent national averages and may vary significantly by location</li>
+                        <li>• Calculations assume full-time work (40 hours/week, ~160 hours/month)</li>
+                        <li>• Government assistance eligibility based on Federal Poverty Level guidelines</li>
+                        <li>• Does not include taxes, savings, emergency expenses, or discretionary spending</li>
+                        <li>• Healthcare costs reflect out-of-pocket expenses for low-income individuals</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let policyOverrides = {
+            wage: null,
+            healthcare: null,
+            childcare: null
+        };
+
+        // Toggle assistance details
+        function toggleAssistanceDetails() {
+            const toggle = document.getElementById('government-assistance');
+            const details = document.getElementById('assistance-details');
+
+            toggle.classList.toggle('active');
+
+            if (toggle.classList.contains('active')) {
+                details.classList.remove('hidden');
+            } else {
+                details.classList.add('hidden');
+            }
+
+            // Recalculate if results are visible
+            const results = document.getElementById('results');
+            if (!results.classList.contains('hidden')) {
+                calculateBudget();
+            }
+        }
+
+        // Main calculation function
+        function calculateBudget() {
+            const hourlyWage = parseFloat(document.getElementById('hourly-wage').value) || 7.25;
+            const familySize = parseInt(document.getElementById('family-size').value) || 1;
+            const governmentAssistance = document.getElementById('government-assistance').classList.contains('active');
+
+            // Apply policy overrides and solutions
+            let effectiveWage = policyOverrides.wage !== null ? policyOverrides.wage : hourlyWage;
+
+            // Apply $15 minimum wage solution if active
+            if (activeSolutions.minWage15) {
+                effectiveWage = 15;
+            }
+
+            // Calculate monthly income (40 hours/week * 4.33 weeks/month)
+            let monthlyIncome = effectiveWage * 160; // 160 hours per month
+
+            // Apply income-based solutions
+            if (activeSolutions.eitc) {
+                monthlyIncome += 200; // Expanded EITC: +$200/month
+            }
+
+            if (activeSolutions.childAllowance && familySize > 2) {
+                const children = familySize - 2;
+                monthlyIncome += (300 * children); // Child Allowance: +$300/month per child
+            }
+
+            // Calculate expenses based on family size
+            let housingCost, foodCost, transportCost, healthcareCost, childcareCost;
+            let adults, children;
+
+            if (familySize === 1) {
+                // Single person costs based on national averages
+                housingCost = 1326; // National average rent for 1-bedroom apartment (2024)
+                foodCost = 301; // USDA Thrifty Food Plan for 1 person (2024)
+                transportCost = 377; // Low-income transportation costs: ~30% of income for lowest quintile (BLS 2024)
+                healthcareCost = 156; // Low-income healthcare spending: $1,868/year ÷ 12 months (BLS 2024)
+                childcareCost = 0;
+                adults = 1;
+                children = 0;
+            } else if (familySize === 2) {
+                // Couple with no children - same housing as single person
+                housingCost = 1326; // Same 1-bedroom apartment
+                foodCost = 691; // USDA Thrifty Food Plan for 2 people
+                transportCost = 450; // Low-income couples transportation (scaled from single person)
+                healthcareCost = 271; // Healthcare for 2 adults
+                childcareCost = 0;
+                adults = 2;
+                children = 0;
+            } else {
+                // Family with children - needs more space
+                adults = 2;
+                children = familySize - 2;
+
+                // Family costs based on national averages
+                housingCost = 1578 + (children > 1 ? (children - 1) * 200 : 0); // 2-bedroom base, extra cost for 3+ children
+                foodCost = 691 + (children * 183); // USDA Thrifty Food Plan scaling by family size
+                transportCost = 500; // Low-income families transportation (modest increase for children)
+                healthcareCost = 271 + (children * 85); // Low-income family healthcare scaling by size
+                childcareCost = children > 0 ? (446 * children) : 0; // Low-income childcare spending: $5,356/year ÷ 12 months per child
+            }
+
+            // Apply policy overrides
+            if (policyOverrides.healthcare !== null) {
+                healthcareCost = policyOverrides.healthcare;
+            }
+            if (policyOverrides.childcare !== null) {
+                childcareCost = policyOverrides.childcare;
+            }
+
+            // Apply solution-based expense reductions
+            if (activeSolutions.housingVoucher) {
+                housingCost = Math.max(0, housingCost - 400); // Housing Voucher: -$400/month
+            }
+
+            if (activeSolutions.universalPreK && children > 0) {
+                childcareCost = Math.max(0, childcareCost - (450 * children)); // Universal Pre-K: -$450/month per child
+            }
+
+            if (activeSolutions.publicHealth) {
+                healthcareCost = Math.max(0, healthcareCost - 100); // Public Health Option: -$100/month
+            }
+
+            // Calculate government assistance if enabled
+            let snapBenefit = 0, wicBenefit = 0, medicaidBenefit = 0, childcareBenefit = 0, section8Benefit = 0;
+
+            if (governmentAssistance) {
+                // Federal Poverty Level calculations (2024)
+                const fplSingle = 15060; // Annual FPL for 1 person
+                const fplFamily4 = 31200; // Annual FPL for family of 4
+                const fplBase = fplSingle + ((familySize - 1) * 4720); // Approximate FPL for family size
+                const annualIncome = monthlyIncome * 12;
+                const fplPercentage = (annualIncome / fplBase) * 100;
+
+                // SNAP (Food Stamps) - up to 130% FPL
+                if (fplPercentage <= 130) {
+                    if (familySize === 1) snapBenefit = 291;
+                    else if (familySize === 2) snapBenefit = 535;
+                    else if (familySize === 3) snapBenefit = 766;
+                    else if (familySize === 4) snapBenefit = 973;
+                    else snapBenefit = 973 + ((familySize - 4) * 200);
+
+                    foodCost = Math.max(0, foodCost - snapBenefit);
+                }
+
+                // WIC - up to 185% FPL (pregnant women, infants, children under 5)
+                if (fplPercentage <= 185 && children > 0) {
+                    wicBenefit = Math.min(children, 2) * 47; // Average monthly WIC benefit per eligible child
+                    foodCost = Math.max(0, foodCost - wicBenefit);
+                }
+
+                // Medicaid - up to 138% FPL
+                if (fplPercentage <= 138) {
+                    medicaidBenefit = healthcareCost * 0.8; // Medicaid covers ~80% of healthcare costs
+                    healthcareCost = Math.max(0, healthcareCost - medicaidBenefit);
+                }
+
+                // Childcare Subsidies - up to 200% FPL
+                if (fplPercentage <= 200 && children > 0) {
+                    childcareBenefit = childcareCost * 0.7; // Subsidies cover ~70% of childcare costs
+                    childcareCost = Math.max(0, childcareCost - childcareBenefit);
+                }
+
+                // Section 8 Housing - up to 80% FPL
+                if (fplPercentage <= 80) {
+                    section8Benefit = housingCost * 0.6; // Section 8 covers ~60% of housing costs
+                    housingCost = Math.max(0, housingCost - section8Benefit);
+                }
+            }
+
+            const totalExpenses = housingCost + foodCost + transportCost + healthcareCost + childcareCost;
+            const monthlyBalance = monthlyIncome - totalExpenses;
+
+            // Update the display
+            document.getElementById('monthly-income').textContent = monthlyIncome.toFixed(0);
+            document.getElementById('housing-cost').textContent = housingCost.toFixed(0);
+            document.getElementById('food-cost').textContent = foodCost.toFixed(0);
+            document.getElementById('transport-cost').textContent = transportCost.toFixed(0);
+            document.getElementById('healthcare-cost').textContent = healthcareCost.toFixed(0);
+            document.getElementById('childcare-cost').textContent = childcareCost.toFixed(0);
+            document.getElementById('total-expenses-output').textContent = totalExpenses.toFixed(0);
+
+            // Update assistance breakdown
+            const assistanceBreakdown = document.getElementById('assistance-breakdown');
+            if (governmentAssistance && (snapBenefit + wicBenefit + medicaidBenefit + childcareBenefit + section8Benefit) > 0) {
+                document.getElementById('snap-benefit').textContent = snapBenefit.toFixed(0);
+                document.getElementById('wic-benefit').textContent = wicBenefit.toFixed(0);
+                document.getElementById('medicaid-benefit').textContent = medicaidBenefit.toFixed(0);
+                document.getElementById('childcare-benefit').textContent = childcareBenefit.toFixed(0);
+                document.getElementById('section8-benefit').textContent = section8Benefit.toFixed(0);
+                assistanceBreakdown.classList.remove('hidden');
+
+                // Add animation
+                assistanceBreakdown.classList.add('number-change');
+                setTimeout(() => assistanceBreakdown.classList.remove('number-change'), 1000);
+            } else {
+                assistanceBreakdown.classList.add('hidden');
+            }
+
+            // Add animations to changed numbers
+            ['housing-cost', 'food-cost', 'healthcare-cost', 'childcare-cost', 'total-expenses-output'].forEach(id => {
+                const element = document.getElementById(id);
+                element.classList.add('number-change');
+                setTimeout(() => element.classList.remove('number-change'), 1000);
+            });
+
+            // Update balance and narrative
+            const deficitOutput = document.getElementById('deficit-output');
+            const narrative = document.getElementById('narrative');
+
+            if (monthlyBalance >= 0) {
+                deficitOutput.textContent = `+$${monthlyBalance.toFixed(0)}`;
+                deficitOutput.className = 'text-green-600';
+                narrative.innerHTML = `<strong>Surplus:</strong> This family has $${monthlyBalance.toFixed(0)} left over each month after basic expenses. This provides some financial breathing room for savings, emergencies, or discretionary spending.`;
+            } else {
+                deficitOutput.textContent = `-$${Math.abs(monthlyBalance).toFixed(0)}`;
+                deficitOutput.className = 'text-red-600';
+                const assistanceText = governmentAssistance ? " even with government assistance" : " (see breakdown above)";
+                narrative.innerHTML = `<strong>Deficit:</strong> This family falls short by $${Math.abs(monthlyBalance).toFixed(0)} each month${assistanceText}. This means they cannot afford basic necessities without going into debt, borrowing money, or making difficult choices like skipping meals or medical care.`;
+            }
+
+            deficitOutput.classList.add('number-change');
+            setTimeout(() => deficitOutput.classList.remove('number-change'), 1000);
+
+            // Show results
+            document.getElementById('results').classList.remove('hidden');
+        }
+
+        // Policy simulation function
+        function simulatePolicy(policyType, value) {
+            // Check if the policy is already active
+            if (policyOverrides[policyType] === value) {
+                // If it's the "positive" one, deactivate it
+                if (value === 15 || value === 0) {
+                    policyOverrides[policyType] = null;
+                    // Reset wage input to original value when deactivating wage policy
+                    if (policyType === 'wage') {
+                        document.getElementById('hourly-wage').value = 7.25;
+                    }
+                } else {
+                    // Otherwise, just do nothing
+                    return;
+                }
+            } else {
+                // Deactivate the other option for this policy type
+                if (policyType === 'wage') {
+                    policyOverrides.wage = null;
+                    // Update the wage input field to show the simulated wage
+                    document.getElementById('hourly-wage').value = value;
+                } else if (policyType === 'healthcare') {
+                    policyOverrides.healthcare = null;
+                } else if (policyType === 'childcare') {
+                    policyOverrides.childcare = null;
+                }
+                // Set the new policy value
+                policyOverrides[policyType] = value;
+            }
+
+            // Update button styles based on active policies
+            updateButtonStyles();
+
+            // Recalculate and display the budget with the new parameters
+            calculateBudget();
+        }
+
+        // Reset all policies
+        function resetPolicies() {
+            policyOverrides = {
+                wage: null,
+                healthcare: null,
+                childcare: null
+            };
+
+            // Reset wage input
+            document.getElementById('hourly-wage').value = 7.25;
+
+            // Update button styles
+            updateButtonStyles();
+
+            // Recalculate
+            calculateBudget();
+        }
+
+        // Reset all policies and solutions
+        function resetAllPolicies() {
+            // Reset policy overrides
+            policyOverrides = {
+                wage: null,
+                healthcare: null,
+                childcare: null
+            };
+
+            // Reset solutions
+            Object.keys(activeSolutions).forEach(key => {
+                activeSolutions[key] = false;
+            });
+
+            // Reset wage input
+            document.getElementById('hourly-wage').value = 7.25;
+
+            // Update button styles
+            updateButtonStyles();
+            updateSolutionButtons();
+
+            // Hide benefits cliff warning
+            document.getElementById('benefits-cliff-warning').classList.add('hidden');
+
+            // Recalculate
+            calculateBudget();
+        }
+
+        // Update button styles based on active policies
+        function updateButtonStyles() {
+            // Reset policy buttons to default style
+            const policyButtons = ['wage-15-btn', 'healthcare-0-btn', 'childcare-0-btn'];
+            policyButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.className = 'btn-secondary text-left p-4 h-auto';
+                }
+            });
+
+            // Highlight active policy buttons
+            if (policyOverrides.wage === 15) {
+                document.getElementById('wage-15-btn').className = 'btn-secondary text-left p-4 h-auto policy-btn-active';
+            }
+            if (policyOverrides.healthcare === 0) {
+                document.getElementById('healthcare-0-btn').className = 'btn-secondary text-left p-4 h-auto policy-btn-active';
+            }
+            if (policyOverrides.childcare === 0) {
+                document.getElementById('childcare-0-btn').className = 'btn-secondary text-left p-4 h-auto policy-btn-active';
+            }
+        }
+
+        // Solutions That Work functionality
+        let activeSolutions = {
+            eitc: false,
+            childAllowance: false,
+            housingVoucher: false,
+            universalPreK: false,
+            publicHealth: false,
+            minWage15: false
+        };
+
+        // Toggle a solution on/off
+        function toggleSolution(solutionType) {
+            activeSolutions[solutionType] = !activeSolutions[solutionType];
+            updateSolutionButtons();
+            calculateBudget(); // Update main budget instead of separate results
+        }
+
+        // Update button styles based on active solutions
+        function updateSolutionButtons() {
+            // Map solution keys to their button IDs
+            const buttonIdMap = {
+                'eitc': 'solution-eitc',
+                'childAllowance': 'solution-child-allowance',
+                'housingVoucher': 'solution-housing-voucher',
+                'universalPreK': 'solution-universal-prek',
+                'publicHealth': 'solution-public-health',
+                'minWage15': 'solution-min-wage'
+            };
+
+            Object.keys(activeSolutions).forEach(solution => {
+                const buttonId = buttonIdMap[solution];
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    if (activeSolutions[solution]) {
+                        button.className = 'btn-secondary text-left p-4 h-auto policy-btn-active';
+                    } else {
+                        button.className = 'btn-secondary text-left p-4 h-auto';
+                    }
+                }
+            });
+        }
+
+        // Clear all solutions
+        function clearAllSolutions() {
+            Object.keys(activeSolutions).forEach(key => {
+                activeSolutions[key] = false;
+            });
+            updateSolutionButtons();
+            calculateBudget(); // Update main budget instead of hiding results
+        }
+
+        // Calculate the combined impact of all active solutions
+        function calculateSolutionsImpact() {
+            const hourlyWage = parseFloat(document.getElementById('hourly-wage').value) || 7.25;
+            const familySize = parseInt(document.getElementById('family-size').value) || 1;
+            const children = Math.max(0, familySize - 2);
+            const governmentAssistance = document.getElementById('government-assistance').classList.contains('active');
+
+            // Get baseline monthly income and expenses (same logic as main calculator)
+            let baseMonthlyIncome = hourlyWage * 160; // 160 hours per month
+            let baseExpenses = getBaseExpenses(familySize);
+
+            let incomeChange = 0;
+            let expenseSavings = 0;
+            let subsidyLoss = 0; // Track lost government benefits
+
+            // Calculate new wage after solutions
+            let newHourlyWage = hourlyWage;
+            if (activeSolutions.minWage15) {
+                newHourlyWage = 15;
+                incomeChange += ((15 - hourlyWage) * 160); // Additional income from wage increase
+            }
+
+            // Calculate impact of other solutions
+            if (activeSolutions.eitc) {
+                incomeChange += 200; // Expanded EITC: +$200/month
+            }
+
+            if (activeSolutions.childAllowance && children > 0) {
+                incomeChange += (300 * children); // Child Allowance: +$300/month per child
+            }
+
+            if (activeSolutions.housingVoucher) {
+                expenseSavings += 400; // Housing Voucher: -$400/month
+            }
+
+            if (activeSolutions.universalPreK && children > 0) {
+                expenseSavings += (450 * children); // Universal Pre-K: -$450/month per child
+            }
+
+            if (activeSolutions.publicHealth) {
+                expenseSavings += 100; // Public Health Option: -$100/month
+            }
+
+            // Calculate benefits cliff impact if government assistance is enabled
+            if (governmentAssistance) {
+                const newMonthlyIncome = baseMonthlyIncome + incomeChange;
+                const newAnnualIncome = newMonthlyIncome * 12;
+
+                // Federal Poverty Level calculations (2024)
+                const fplBase = 15060 + ((familySize - 1) * 4720); // Approximate FPL for family size
+                const newFplPercentage = (newAnnualIncome / fplBase) * 100;
+
+                // Calculate baseline benefits (what they had before solutions)
+                const baseAnnualIncome = baseMonthlyIncome * 12;
+                const baseFplPercentage = (baseAnnualIncome / fplBase) * 100;
+
+                let baseSnapBenefit = 0, baseWicBenefit = 0, baseMedicaidBenefit = 0;
+                let baseChildcareBenefit = 0, baseSection8Benefit = 0;
+
+                // Calculate baseline benefits
+                if (baseFplPercentage <= 130) {
+                    if (familySize === 1) baseSnapBenefit = 291;
+                    else if (familySize === 2) baseSnapBenefit = 535;
+                    else if (familySize === 3) baseSnapBenefit = 766;
+                    else if (familySize === 4) baseSnapBenefit = 973;
+                    else baseSnapBenefit = 973 + ((familySize - 4) * 200);
+                }
+
+                if (baseFplPercentage <= 185 && children > 0) {
+                    baseWicBenefit = Math.min(children, 2) * 47;
+                }
+
+                if (baseFplPercentage <= 138) {
+                    const baseHealthcareCost = getBaseExpenses(familySize).healthcare;
+                    baseMedicaidBenefit = baseHealthcareCost * 0.8;
+                }
+
+                if (baseFplPercentage <= 200 && children > 0) {
+                    const baseChildcareCost = getBaseExpenses(familySize).childcare;
+                    baseChildcareBenefit = baseChildcareCost * 0.7;
+                }
+
+                if (baseFplPercentage <= 80) {
+                    const baseHousingCost = getBaseExpenses(familySize).housing;
+                    baseSection8Benefit = baseHousingCost * 0.6;
+                }
+
+                // Calculate new benefits after solutions
+                let newSnapBenefit = 0, newWicBenefit = 0, newMedicaidBenefit = 0;
+                let newChildcareBenefit = 0, newSection8Benefit = 0;
+
+                if (newFplPercentage <= 130) {
+                    if (familySize === 1) newSnapBenefit = 291;
+                    else if (familySize === 2) newSnapBenefit = 535;
+                    else if (familySize === 3) newSnapBenefit = 766;
+                    else if (familySize === 4) newSnapBenefit = 973;
+                    else newSnapBenefit = 973 + ((familySize - 4) * 200);
+                }
+
+                if (newFplPercentage <= 185 && children > 0) {
+                    newWicBenefit = Math.min(children, 2) * 47;
+                }
+
+                if (newFplPercentage <= 138) {
+                    const baseHealthcareCost = getBaseExpenses(familySize).healthcare;
+                    newMedicaidBenefit = baseHealthcareCost * 0.8;
+                }
+
+                if (newFplPercentage <= 200 && children > 0) {
+                    const baseChildcareCost = getBaseExpenses(familySize).childcare;
+                    newChildcareBenefit = baseChildcareCost * 0.7;
+                }
+
+                if (newFplPercentage <= 80) {
+                    const baseHousingCost = getBaseExpenses(familySize).housing;
+                    newSection8Benefit = baseHousingCost * 0.6;
+                }
+
+                // Calculate subsidy loss
+                subsidyLoss = (baseSnapBenefit - newSnapBenefit) +
+                    (baseWicBenefit - newWicBenefit) +
+                    (baseMedicaidBenefit - newMedicaidBenefit) +
+                    (baseChildcareBenefit - newChildcareBenefit) +
+                    (baseSection8Benefit - newSection8Benefit);
+
+                // Adjust expense savings to account for lost benefits
+                expenseSavings = Math.max(0, expenseSavings - subsidyLoss);
+            }
+
+            // Calculate new balance
+            const newMonthlyIncome = baseMonthlyIncome + incomeChange;
+            const newMonthlyExpenses = baseExpenses.total - expenseSavings;
+            const newBalance = newMonthlyIncome - newMonthlyExpenses;
+
+            // Update display
+            document.getElementById('income-change').textContent = incomeChange.toFixed(0);
+            document.getElementById('monthly-savings').textContent = expenseSavings.toFixed(0);
+            document.getElementById('new-balance').textContent = Math.abs(newBalance).toFixed(0);
+
+            const newBalanceDisplay = document.getElementById('new-balance-display');
+            if (newBalance >= 0) {
+                newBalanceDisplay.className = 'text-xl font-bold text-green-600';
+                document.getElementById('new-balance').textContent = '+' + newBalance.toFixed(0);
+            } else {
+                newBalanceDisplay.className = 'text-xl font-bold text-red-600';
+                document.getElementById('new-balance').textContent = '-' + Math.abs(newBalance).toFixed(0);
+            }
+
+            // Show benefits cliff warning if there's significant subsidy loss
+            updateBenefitsCliffWarning(subsidyLoss, newHourlyWage > hourlyWage);
+
+            // Show results if any solutions are active
+            const hasActiveSolutions = Object.values(activeSolutions).some(active => active);
+            if (hasActiveSolutions) {
+                document.getElementById('solutions-results').classList.remove('hidden');
+            } else {
+                document.getElementById('solutions-results').classList.add('hidden');
+            }
+        }
+
+        // Show benefits cliff warning when subsidies are lost
+        function updateBenefitsCliffWarning(subsidyLoss, hasWageIncrease) {
+            const warningDiv = document.getElementById('benefits-cliff-warning');
+            const warningText = document.getElementById('cliff-warning-text');
+
+            if (subsidyLoss > 50 && hasWageIncrease) { // Show warning if losing more than $50/month in benefits
+                warningText.textContent = `Higher income from wage increases may result in losing $${subsidyLoss.toFixed(0)}/month in government benefits. This "benefits cliff" effect has been factored into the calculations above.`;
+                warningDiv.classList.remove('hidden');
+            } else if (subsidyLoss > 0 && hasWageIncrease) {
+                warningText.textContent = `Note: Higher income may reduce some government benefits by $${subsidyLoss.toFixed(0)}/month, but the overall impact is still positive.`;
+                warningDiv.classList.remove('hidden');
+            } else {
+                warningDiv.classList.add('hidden');
+            }
+        }
+
+        // Helper function to get base expenses (matches main calculator logic)
+        function getBaseExpenses(familySize) {
+            let housingCost, foodCost, transportCost, healthcareCost, childcareCost;
+            let children = Math.max(0, familySize - 2);
+
+            if (familySize === 1) {
+                housingCost = 1326;
+                foodCost = 301;
+                transportCost = 377;
+                healthcareCost = 156;
+                childcareCost = 0;
+            } else if (familySize === 2) {
+                housingCost = 1326; // Same 1-bedroom apartment
+                foodCost = 691;
+                transportCost = 450;
+                healthcareCost = 271;
+                childcareCost = 0;
+            } else {
+                housingCost = 1578 + (children > 1 ? (children - 1) * 200 : 0);
+                foodCost = 691 + (children * 183);
+                transportCost = 450;
+                healthcareCost = 271 + (children * 85);
+                childcareCost = children > 0 ? (446 * children) : 0;
+            }
+
+            const total = housingCost + foodCost + transportCost + healthcareCost + childcareCost;
+
+            return {
+                housing: housingCost,
+                food: foodCost,
+                transport: transportCost,
+                healthcare: healthcareCost,
+                childcare: childcareCost,
+                total: total
+            };
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add debounced event listener for hourly wage to prevent constant recalculation
+            let wageTimeout;
+            document.getElementById('hourly-wage').addEventListener('input', function () {
+                clearTimeout(wageTimeout);
+                wageTimeout = setTimeout(() => {
+                    calculateBudget();
+                    if (Object.values(activeSolutions).some(active => active)) {
+                        calculateSolutionsImpact();
+                    }
+                }, 500); // Wait 500ms after user stops typing
+            });
+
+            // Family size changes immediately since it's a dropdown
+            document.getElementById('family-size').addEventListener('change', function () {
+                calculateBudget();
+                if (Object.values(activeSolutions).some(active => active)) {
+                    calculateSolutionsImpact();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
